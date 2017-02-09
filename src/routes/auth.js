@@ -17,8 +17,8 @@ const oauth2 = simpleOauthModule.create({
 
 // Authorization uri definition
 const authorizationUri = oauth2.authorizationCode.authorizeURL({
-  redirect_uri: 'http://localhost:8081/auth/redirect',
-  state: '3453454567'
+  redirect_uri: process.env.MONZO_OAUTH_REDIRECT_URL,
+  state: process.env.MONZO_OAUTH_STATE
 });
 
 // Initial page redirecting to Monzo
@@ -32,7 +32,7 @@ router.get('/redirect', (req, res) => {
   const code = req.query.code;
   const options = {
     code: code,
-    redirect_uri: 'http://localhost:8081/auth/redirect'
+    redirect_uri: process.env.MONZO_OAUTH_REDIRECT_URL
   };
 
   oauth2.authorizationCode.getToken(options, (error, result) => {
@@ -40,10 +40,10 @@ router.get('/redirect', (req, res) => {
       console.error('Access Token Error', error.message);
       return res.json('Authentication failed');
     }
-
+    
     console.log('The resulting token: ', result);
     const token = oauth2.accessToken.create(result);
-
+  
     return res
       .status(200)
       .json(token);

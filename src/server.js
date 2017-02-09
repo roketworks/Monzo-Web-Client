@@ -1,8 +1,12 @@
 'use strict';
+
+// Import development env vars from .env file
+// NOT TO BE USED IN PRODUCTION
 require('dotenv').config(); 
+
 const express = require('express');  
 const bodyParser = require('body-parser');
-//const simpleOauthModule = require('simple-oauth2');
+const mongoose = require('mongoose');
 
 const app = express();
 // configure app to use bodyParser()
@@ -10,57 +14,20 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-/*const oauth2 = simpleOauthModule.create({
-  client: {
-    id: process.env.MONZO_OAUTH_CLIENT_ID,
-    secret: process.env.MONZO_OAUTH_CLIENT_SECRET,
-  },
-  auth: {
-    tokenHost: 'https://api.getmondo.co.uk',
-    tokenPath: '/oauth2/token',
-    authorizeHost: 'https://auth.getmondo.co.uk',
-    authorizePath: '/'
-  },
-});
+app.set('view engine', 'pug');
 
-// Authorization uri definition
-const authorizationUri = oauth2.authorizationCode.authorizeURL({
-  redirect_uri: 'http://localhost:8081/redirect',
-  state: '3453454567'
-});
-
-// Initial page redirecting to Monzo
-app.get('/auth', (req, res) => {
-  console.log(authorizationUri);
-  res.redirect(authorizationUri);
-});
-
-// Callback service parsing the authorization token and asking for the access token
-app.get('/redirect', (req, res) => {
-  const code = req.query.code;
-  const options = {
-    code: code,
-    redirect_uri: 'http://localhost:8081/redirect'
-  };
-
-  oauth2.authorizationCode.getToken(options, (error, result) => {
-    if (error) {
-      console.error('Access Token Error', error.message);
-      return res.json('Authentication failed');
+/*mongoose.connect(process.env.DB_CONN, {
+  server: {
+    socketOptions: {
+      socketTimeoutMS: 0,
+      connectTimeoutMS: 0
     }
-
-    console.log('The resulting token: ', result);
-    const token = oauth2.accessToken.create(result);
-
-    return res
-      .status(200)
-      .json(token);
-  });
+  }
 });*/
 
-// Register routes
-//app.use('/user', require('routes/user'));
-app.use('/auth', require('./routes/auth'))
+// Register Routes
+app.use('/auth', require('./routes/auth'));
+app.use('/users', require('./routes/user'));
 
 var port = process.env.PORT || 8081; 
 app.listen(port);
