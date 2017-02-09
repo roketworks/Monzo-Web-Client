@@ -4,7 +4,9 @@
   "description": "Budget helper application for Monzo",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "migratedb": "node_modules/.bin/sequelize db:migrate",
+    "run": "node src/server.js",
+    "start": "npm run -s migratedb & npm run -s run",
     "start-dev": "node -r dotenv/config src/server.js"
   },
   "author": "Mike McFarland",
