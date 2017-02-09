@@ -72,8 +72,6 @@ router.get('/redirect', (req, res) => {
         });
       }
     });  
-  
-    return res.status(200).json(token);
   });
 });
 
