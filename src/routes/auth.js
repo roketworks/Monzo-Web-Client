@@ -1,6 +1,8 @@
 var express = require('express');
-var router = express.Router();
+var models = require('../models/index'); 
 const simpleOauthModule = require('simple-oauth2');
+
+var router = express.Router();
 
 const oauth2 = simpleOauthModule.create({
   client: {
@@ -43,10 +45,35 @@ router.get('/redirect', (req, res) => {
     
     console.log('The resulting token: ', result);
     const token = oauth2.accessToken.create(result);
+
+    // Save/update token & monzo user details
+    // Todo, encrypt token storage
+    models.User.find({where: {
+        monzo_user_id: result.user_id
+      }
+    }).then(function(user){
+      if (user) {
+        user.updateAttributes({
+          monzo_token: token
+        }).then(function(user){
+          return res.status(200).json(user);
+        });
+      } else {
+        // todo: lookup accountid from monzo api
+        models.User.create({
+          monzo_token: token, 
+          monzo_user_id: token.monzo_user_id
+        }).then(function(user){
+          if (user){
+            return res.status(200).json(user);
+          } else {
+            return res.status(500).json({"message": "error occuring saving user details"});
+          }
+        });
+      }
+    });  
   
-    return res
-      .status(200)
-      .json(token);
+    return res.status(200).json(token);
   });
 });
 
