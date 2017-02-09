@@ -49,7 +49,7 @@ router.get('/redirect', (req, res) => {
     // Save/update token & monzo user details
     // Todo, encrypt token storage
     models.User.find({where: {
-        monzo_user_id: result.user_id
+        monzo_user_id: result.token.user_id
       }
     }).then(function(user){
       if (user) {
@@ -62,7 +62,7 @@ router.get('/redirect', (req, res) => {
         // todo: lookup accountid from monzo api
         models.User.create({
           monzo_token: token, 
-          monzo_user_id: token.user_id
+          monzo_user_id: result.token.user_id
         }).then(function(user){
           if (user){
             return res.status(200).json(user);
