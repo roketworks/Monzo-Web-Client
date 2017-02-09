@@ -62,7 +62,7 @@ router.get('/redirect', (req, res) => {
         // todo: lookup accountid from monzo api
         models.User.create({
           monzo_token: token, 
-          monzo_user_id: token.monzo_user_id
+          monzo_user_id: token.user_id
         }).then(function(user){
           if (user){
             return res.status(200).json(user);
