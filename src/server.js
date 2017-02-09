@@ -16,17 +16,12 @@ app.use(bodyParser.json());
 
 app.set('view engine', 'pug');
 
-/*mongoose.connect(process.env.DB_CONN, {
-  server: {
-    socketOptions: {
-      socketTimeoutMS: 0,
-      connectTimeoutMS: 0
-    }
-  }
-});*/
-
 // Register Routes
+// Both of these below routes need to be public and not use authentication
 app.use('/auth', require('./routes/auth'));
+app.use('/endpoints', require('./routes/endpoints')); 
+
+// Below routes need protected
 app.use('/users', require('./routes/user'));
 
 var port = process.env.PORT || 8081; 

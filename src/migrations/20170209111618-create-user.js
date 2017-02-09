@@ -8,8 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
-        type: Sequelize.UUID
+      monzo_user_id: {
+        type: Sequelize.STRING
+      },
+      monzo_acc_id:{
+        type: Sequelize.STRING
       },
       monzo_token: {
         type: Sequelize.JSON

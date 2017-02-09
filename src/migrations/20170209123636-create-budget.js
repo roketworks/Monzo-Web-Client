@@ -8,9 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      budget_id: {
-        type: Sequelize.UUID
-      },
       budget_value: {
         type: Sequelize.INTEGER
       },
