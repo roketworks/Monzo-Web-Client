@@ -1,0 +1,31 @@
+doctype html  
+html  
+  head
+    block title
+      title Error
+    
+    style(type='text/css').
+       @import url('https://fonts.googleapis.com/css?family=Muli:400,700');
+      .html, body {
+          font-family: 'Muli';
+          font-weight:400;
+          color: #fff;
+          background-color: #16243b;
+      }
+      .container {
+        display: table;
+        width: 100%;
+        height: 100%; /* For at least Firefox */
+        min-height: 100%;
+        text-align: center;
+      }
+      .h1 {
+        font-weight: 700;
+      }
+
+  body
+    .container
+      h1 Error Occured
+      h2= status
+      p= message
+      p= error 

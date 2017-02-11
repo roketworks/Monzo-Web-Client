@@ -1,4 +1,5 @@
 var express = require('express');
+var request = require('request-promise');
 var models = require('../models/index'); 
 const simpleOauthModule = require('simple-oauth2');
 
@@ -44,32 +45,53 @@ router.get('/redirect', (req, res) => {
     }
     
     console.log('The resulting token: ', result);
-    const token = oauth2.accessToken.create(result);
+    //const token = oauth2.accessToken.create(result);
 
     // Save/update token & monzo user details
     // Todo, encrypt token storage
     models.User.find({where: {
-        monzo_user_id: token.user_id
+        monzo_user_id: result.user_id
       }
     }).then(function(user){
       if (user) {
         user.updateAttributes({
-          monzo_token: token
+          monzo_token: result
         }).then(function(user){
-          return res.status(200).json(user);
+          res.cookie('mbtoken', result);
+          return res.redirect('/transactions');
         });
       } else {
         // todo: lookup accountid from monzo api
-        models.User.create({
-          monzo_token: token, 
-          monzo_user_id: token.user_id
-        }).then(function(user){
-          if (user){
-            return res.status(200).json(user);
-          } else {
-            return res.status(500).json({"message": "error occuring saving user details"});
-          }
-        });
+        const acc_req_options = {  
+          method: 'GET',
+          uri: process.env.MONZO_API_ENDPOINT + '/accounts',
+          auth:{bearer: result.access_token},
+          json: true 
+        }; 
+
+        request(acc_req_options).then(function(accounts){
+          var account_id = accounts.accounts[0].id;
+
+          models.User.create({
+            monzo_token: result, 
+            monzo_acc_id: account_id,
+            monzo_user_id: result.user_id
+          }).then(function(user){
+            if (user){
+              res.cookie('mbtoken', result);
+              return res.redirect('/transactions');
+            } else {
+              return res.status(500).json({"message": "error occuring saving user details"});
+            }
+          });
+        }).catch((err)=> {
+          console.log(err);
+          res.render('error', {
+              status: 500,
+              message: "Error loading account information", 
+              error: null
+          });
+        });      
       }
     });  
   });

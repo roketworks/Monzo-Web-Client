@@ -1,11 +1,18 @@
 {
   "development": {
-     "use_env_variable": "DATABASE_URL"
+    "username": "michael.mcfarland",
+    "password": null,
+    "database": "postgres",
+    "host": "localhost",
+    "dialect": "postgres", 
+    "seederStorage": "sequelize"
   },
   "test": {
-    "use_env_variable": "DATABASE_URL"
+    "use_env_variable": "DATABASE_URL", 
+     "seederStorage": "sequelize"
   },
   "production": {
-    "use_env_variable": "DATABASE_URL"
+    "use_env_variable": "DATABASE_URL", 
+     "seederStorage": "sequelize"
   }
 }

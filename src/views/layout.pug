@@ -1,0 +1,31 @@
+extends ../../node_modules/pug-bootstrap/_bootstrap
+
+append styles
+	// Custom styles for this template
+	link(href='/css/navbar.css', rel='stylesheet')
+	
+block body
+	nav.navbar.navbar-inverse.navbar-fixed-top
+		.container-fluid
+			.navbar-header
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href='#') Monzo Budget
+			#navbar.navbar-collapse.collapse
+				ul.nav.navbar-nav.navbar-right
+					li
+						a(href='/transactions') Transactions
+					li
+						a(href='#') Budgeting
+					li
+						a(href='#') Help
+
+	block content
+
+	block scripts
+		script(src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous")
+		script.
+			$('ul.nav > li > a[href="' + document.location.pathname + '"]').parent().addClass('active');

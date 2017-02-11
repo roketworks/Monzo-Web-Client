@@ -1,0 +1,30 @@
+extends ../../node_modules/pug-bootstrap/_bootstrap
+append styles
+  //	!-- Custom styles for this template --
+  link(href="/css/cover.css", rel="stylesheet")
+
+block body
+  .site-wrapper
+    .site-wrapper-inner
+      .cover-container
+        .masthead.clearfix
+          .inner
+            h3.masthead-brand Monzo Budget
+            nav
+              ul.nav.masthead-nav
+                li.active 
+                  a(href="#") Home
+                li
+                  a(href="https://github.com/roketworks/Monzo-Budget") Github
+
+        .inner.cover
+          h1.cover-heading Welcome to Monzo Budget
+          p.lead Monzo Budget is a simple helper to manage your monzo spending. You can use the spending category and merchant to set your limits. You will get a monzo notification when you reach milestones.
+          p.lead
+          a(href="/auth", class="btn btn-lg btn-default") 
+            img(src="/img/monzo-logo.svg" height=30 width=30) 
+            span  Signin with Monzo
+
+        .mastfoot
+          .inner
+            p Cover template for <a href="http://getbootstrap.com">Bootstrap </a>, by <a href="https://twitter.com/mdo">@mdo</a>.
