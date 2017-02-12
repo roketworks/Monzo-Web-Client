@@ -15,6 +15,8 @@ block content
         //.clearfix.visible-xs-block
         //.col-xs-6.col-sm-4.balance-item
       
+    hr
+    h3 Transactions
     table.table.table-hover
       thead
         tr
@@ -29,8 +31,24 @@ block content
           tr
             td= transaction.categoryDisplayName
             td= transaction.displayDate
-            td= transaction.Description
-            td= transaction.amount
-            td= transaction.account_balance
+            td= transaction.description
+            td= transaction.displayAmount
+            td= transaction.displayBalance
             td 
               a(href='/transactions/' + transaction.id) a link
+  
+    nav.aria-label
+      ul.pager
+        li#previous.previous
+          a(href="/transactions")
+            span(aria-hidden="true") &larr; Newer
+        li#next.next
+          a(href="/transactions?" + older_query)  
+            .span(aria-hidden="true") Older &rarr;
+      
+append scripts 
+  script.
+    var isBefore = $.urlParam('before'); 
+    if (!isBefore) {
+      $('#previous').addClass('disabled');
+    }

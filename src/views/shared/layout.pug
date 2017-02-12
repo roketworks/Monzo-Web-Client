@@ -24,6 +24,17 @@ block body
 
 	block content
 
-	append scripts
-		script.
-			$('ul.nav > li > a[href="' + document.location.pathname + '"]').parent().addClass('active');
+append scripts
+	script.
+		// Utility function to get query string param
+		$.urlParam = function(name){
+			var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+			if (results==null){
+				return null;
+			}
+			else{
+				var res = results[1] || 0;
+				return decodeURIComponent(res);
+			}
+		}
+		$('ul.nav > li > a[href="' + document.location.pathname + '"]').parent().addClass('active');

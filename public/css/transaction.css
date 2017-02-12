@@ -1,3 +1,18 @@
 .transaction-container {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 100px;
+}
+
+@media(min-width: 970px){
+  .transaction-container { 
+    max-width: 700px;
+  }
+}
+
+@media(min-width: 1200px) {
+  .transaction-container {
+    max-width: 970px;
+  }
 }

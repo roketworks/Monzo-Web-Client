@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
     // TODO: refactor into utility module and use in auth middleware
     token.refresh().then(function(new_token){
       models.User.find({where: {
-        monzo_user_id: req.cookies.mbtoken.user_id}
+        monzo_user_id: req.cookies.mbmz_usrid}
       }).then((result) => {
         result.updateAttributes({
           monzo_token: new_token
