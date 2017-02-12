@@ -1,7 +1,6 @@
-extends ../../node_modules/pug-bootstrap/_bootstrap
+extends _bootstrap
 
 append styles
-	// Custom styles for this template
 	link(href='/css/navbar.css', rel='stylesheet')
 	
 block body
@@ -13,7 +12,7 @@ block body
 					span.icon-bar
 					span.icon-bar
 					span.icon-bar
-				a.navbar-brand(href='#') Monzo Budget
+				a.navbar-brand(href='#') Monzo Web Client
 			#navbar.navbar-collapse.collapse
 				ul.nav.navbar-nav.navbar-right
 					li
@@ -25,7 +24,6 @@ block body
 
 	block content
 
-	block scripts
-		script(src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc=" crossorigin="anonymous")
+	append scripts
 		script.
 			$('ul.nav > li > a[href="' + document.location.pathname + '"]').parent().addClass('active');

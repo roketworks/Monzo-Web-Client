@@ -1,0 +1,8 @@
+extends ./shared/layout
+
+append styles 
+  link(href='/css/transaction.css' rel='stylesheet')
+
+block content
+  .transaction-container
+  h1= transaction.id

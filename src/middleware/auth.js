@@ -17,6 +17,7 @@ const oauth2 = simpleOauthModule.create({
 // TODO: possible implement bearer token to fallback onto cookies for rest
 module.exports = function(req, res, next){
   var tokenObject = req.cookies.mbtoken;
+  var monzo_userid = req.cookies.mbmz_usrid;
 
   if (tokenObject === undefined){
     return res.redirect('/');
@@ -28,7 +29,7 @@ module.exports = function(req, res, next){
     token.refresh().then((result) => {
       token = result;
       models.User.find({where: {
-        monzo_user_id: tokenObject.user_id}
+        monzo_user_id: monzo_userid}
       }).then((result) => {
         result.updateAttributes({
           monzo_token: token

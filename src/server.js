@@ -14,6 +14,7 @@ var authMiddleware = require('./middleware/auth');
 
 const app = express();
 
+// Setup View engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
@@ -21,9 +22,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.SECRET));
-app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Error handling
+// Setup error handling, dont display full error in production
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -33,21 +33,22 @@ if (app.get('env') === 'development') {
         error: err
     });
   });
+} else {
+    // production error handler
+    // no stacktraces leaked to user
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            status: err.status || 500,
+            message: err.message,
+            error: null
+        });
+    });
 }
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        status: err.status || 500,
-        message: err.message,
-        error: null
-    });
-});
+// Setup static file hanlding for public css/js/img files
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-
-//test view
 app.get('/', function(req, res){
     res.render('index');
 });

@@ -1,0 +1,38 @@
+.balance-container {
+  width:100%; 
+}
+
+.balance-item {
+  height: 50px;
+  /*background-color: #16243b;*/
+}
+
+#current-balance {
+  font-weight: 700;
+  font-size: 15px; 
+  padding: 8px;
+  padding-bottom: 15px;
+}
+
+.table-container {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 100px;
+}
+
+.table-hover {
+  width:100%;
+}
+
+@media(min-width: 970px){
+  .table-container, .balance-container { 
+    max-width: 700px;
+  }
+}
+
+@media(min-width: 1200px) {
+  .table-container, .balance-container {
+    max-width: 970px;
+  }
+}

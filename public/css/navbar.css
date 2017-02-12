@@ -45,8 +45,25 @@ body {
   border-bottom-color: #fff;
 }
 
+.navbar-inverse {
+  background-color: #16243b;  
+}
+
 .navbar-inverse .navbar-nav>.active>a {
   background-color: #16243b;
+}
+
+.navbar-inverse  .navbar-nav>.active>a:focus {
+  background-color: #16243b;  
+}
+.navbar-inverse .navbar-nav>.active>a:hover {
+  background-color: #16243b;   
+}
+
+@media (min-width: 970px){
+  .container-fluid {
+    max-width: 700;
+  }
 }
 
 @media (min-width: 1200px) {

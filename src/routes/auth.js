@@ -26,12 +26,31 @@ const authorizationUri = oauth2.authorizationCode.authorizeURL({
 
 // Initial page redirecting to Monzo
 router.get('/', (req, res) => {
-  console.log(authorizationUri);
-  res.redirect(authorizationUri);
+  if (req.cookies.mbtoken === undefined){
+    console.log(authorizationUri);
+    res.redirect(authorizationUri);
+  } else {
+    // Refresh token the redirect to transaction
+    const token = oauth2.accessToken.create(req.cookies.mbtoken);
+
+    // TODO: refactor into utility module and use in auth middleware
+    token.refresh().then(function(new_token){
+      models.User.find({where: {
+        monzo_user_id: req.cookies.mbtoken.user_id}
+      }).then((result) => {
+        result.updateAttributes({
+          monzo_token: new_token
+        }).then((result) => {
+          res.cookie('mbtoken', new_token);
+          res.redirect('/transactions');  
+        });
+      });
+    });
+  }
 });
 
 // Callback service parsing the authorization token and asking for the access token
-router.get('/redirect', (req, res) => {
+router.get('/redirect', (req, res, next) => {
   const code = req.query.code;
   const options = {
     code: code,
@@ -43,9 +62,8 @@ router.get('/redirect', (req, res) => {
       console.error('Access Token Error', error.message);
       return res.json('Authentication failed');
     }
-    
-    console.log('The resulting token: ', result);
-    //const token = oauth2.accessToken.create(result);
+
+    const token = oauth2.accessToken.create(result);
 
     // Save/update token & monzo user details
     // Todo, encrypt token storage
@@ -55,9 +73,10 @@ router.get('/redirect', (req, res) => {
     }).then(function(user){
       if (user) {
         user.updateAttributes({
-          monzo_token: result
+          monzo_token: token
         }).then(function(user){
-          res.cookie('mbtoken', result);
+          res.cookie('mbmz_usrid', result.user_id)
+          res.cookie('mbtoken', token);
           return res.redirect('/transactions');
         });
       } else {
@@ -73,23 +92,29 @@ router.get('/redirect', (req, res) => {
           var account_id = accounts.accounts[0].id;
 
           models.User.create({
-            monzo_token: result, 
+            monzo_token: token, 
             monzo_acc_id: account_id,
             monzo_user_id: result.user_id
           }).then(function(user){
             if (user){
-              res.cookie('mbtoken', result);
+              res.cookie('mbmz_usrid', result.user_id)
+              res.cookie('mbtoken', token);
               return res.redirect('/transactions');
             } else {
-              return res.status(500).json({"message": "error occuring saving user details"});
-            }
+              //return res.status(500).json({"message": "error occuring saving user details"});
+              return next({
+                status: 500,
+                message: "Error occuring saving user details.",
+                error: null
+              });
+          }
           });
         }).catch((err)=> {
           console.log(err);
-          res.render('error', {
-              status: 500,
-              message: "Error loading account information", 
-              error: null
+          return next({
+            status: 500,
+            message: "Error loading account information.",
+            error: null
           });
         });      
       }

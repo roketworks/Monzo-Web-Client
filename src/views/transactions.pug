@@ -1,1 +1,36 @@
-extends layout
+extends ./shared/layout
+
+append styles 
+  link(href='/css/transactions.css', rel='stylesheet')
+
+block content
+  .table-container
+    .balance-container.container-fluid
+      .row
+        span#current-balance Current Balance: #{balance}
+        //.col-xs-6.col-sm-4.balance-item
+          //.balance-display
+            //span Current Balance: #{balance}
+        //.col-xs-6.col-sm-4.balance-item
+        //.clearfix.visible-xs-block
+        //.col-xs-6.col-sm-4.balance-item
+      
+    table.table.table-hover
+      thead
+        tr
+          th Category
+          th Date
+          th Description
+          th Amount
+          th Balance
+          th
+      tbody
+        each transaction in transactions
+          tr
+            td= transaction.categoryDisplayName
+            td= transaction.displayDate
+            td= transaction.Description
+            td= transaction.amount
+            td= transaction.account_balance
+            td 
+              a(href='/transactions/' + transaction.id) a link
