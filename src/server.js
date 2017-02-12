@@ -21,7 +21,8 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser(process.env.SECRET));
+//app.use(cookieParser(process.env.SECRET));
+app.use(cookieParser());
 
 // Setup error handling, dont display full error in production
 if (app.get('env') === 'development') {

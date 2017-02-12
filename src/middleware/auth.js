@@ -23,18 +23,18 @@ module.exports = function(req, res, next){
     return res.redirect('/');
   }
 
-  const token = oauth2.accessToken.create(tokenObject);
+  const token = oauth2.accessToken.create(tokenObject.token);
 
   if (token.expired()) {
     token.refresh().then((result) => {
-      token = result;
+      const refereshed_token = oauth2.accessToken.create(result.token);
       models.User.find({where: {
         monzo_user_id: monzo_userid}
       }).then((result) => {
         result.updateAttributes({
-          monzo_token: token
+          monzo_token: refereshed_token
         }).then((result) => {
-          res.cookie('mbtoken', token);
+          res.cookie('mbtoken', refereshed_token);
           next();
         });
       });

@@ -31,10 +31,11 @@ router.get('/', function(req, res, next){
       since_param = moment(req.query.since).toISOString();
     }
 
+    const access_token = user.monzo_token.token.access_token;
     const options = {  
       method: 'GET',
       uri: process.env.MONZO_API_ENDPOINT + '/transactions',
-      auth:{bearer: user.monzo_token.access_token},
+      auth:{bearer: access_token},
       qs: {
         "expand[]": "merchant", 
         "account_id": user.monzo_acc_id, 
@@ -61,7 +62,7 @@ router.get('/', function(req, res, next){
         const balanceOptions = {
           method: 'GET', 
           uri: process.env.MONZO_API_ENDPOINT + '/balance', 
-          auth: {bearer: user.monzo_token.access_token}, 
+          auth: {bearer: access_token}, 
           qs: {account_id: user.monzo_acc_id}, 
           json: true
         };
@@ -92,7 +93,7 @@ router.get('/:trans_id', function(req, res, next){
   const options = {
     method: 'GET',
     uri: process.env.MONZO_API_ENDPOINT + '/transactions/' + req.params.trans_id,
-    auth:{bearer: req.cookies.mbtoken.access_token},
+    auth:{bearer: req.cookies.mbtoken.token.access_token},
     qs: { "expand[]": "merchant" },
     qsStringifyOptions: { encode: false },
     json: true    
@@ -101,9 +102,10 @@ router.get('/:trans_id', function(req, res, next){
   request(options)
     .then(function(transaction_reponse) {
       var transaction = transaction_reponse.transaction;
+      transaction.displayCategory = getTransactionDisplayName(transaction.category);
       transaction.displayDate = new Date(transaction.created).toLocaleString(); 
       transaction.displayBalance = accounting.formatMoney(transaction.account_balance/100, {symbol: '£'});
-      transaction.displayAmount = accounting.formatMoney(transaction.amount/100, {symbol: '£'});
+      transaction.displayAmount = accounting.formatMoney(Math.abs(transaction.amount/100), {symbol: '£'});
       return res.render('transaction', {"transaction": transaction});  
     })
     .catch(function(err){

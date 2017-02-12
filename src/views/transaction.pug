@@ -4,5 +4,61 @@ append styles
   link(href='/css/transaction.css' rel='stylesheet')
 
 block content
-  .transaction-container
-    h3= transaction.id
+  .main-container
+    .map-container
+      div#map
+    .transaction-container
+      .page-header
+        h3.transaction-header #{transaction.merchant.name} #[small #{transaction.displayDate}]
+          span.transaction-header-amount #{transaction.displayAmount}   
+      .transaction-details-container
+        span.transaction
+          span.img-logo 
+            img(src=transaction.merchant.logo).img-rounded.img-logo
+          span.transaction-category #{transaction.displayCategory} #[br] 
+          span.transaction-fscategory #{transaction.merchant.metadata.foursquare_category}
+        address #{transaction.merchant.address.formatted} #[br]
+        span.transaction-notes #{transaction.notes}
+        span.transaction-website 
+          a(href=transaction.merchant.metadata.foursquare_website) #{transaction.merchant.metadata.foursquare_website}
+
+append scripts
+  script.
+    if ($('.transaction-notes').html() == ''){
+      $('.transaction-notes').hide()
+    }
+  script. 
+      var map;
+      var infowindow;
+
+      function initMap() {
+        var centre = {lat: #{transaction.merchant.address.latitude}, lng: #{transaction.merchant.address.longitude}};        
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: centre,
+          zoom: 18
+        });
+
+        infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+
+        service.getDetails({
+          placeId: '#{transaction.merchant.metadata.google_places_id}'
+        }, function(place, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            var marker = new google.maps.Marker({
+              map: map,
+              position: place.geometry.location
+            });
+            google.maps.event.addListener(marker, 'click', function() {
+              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
+                '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
+                '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
+                '</div>');
+              infowindow.open(map, this);
+            });
+          }
+        });
+      }
+      
+  script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcusw1j-6AajYdM2N3C64-vOvhYOprESw&libraries=places&callback=initMap")

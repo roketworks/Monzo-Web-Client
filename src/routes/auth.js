@@ -33,19 +33,22 @@ router.get('/', (req, res) => {
     // Refresh token the redirect to transaction
     const token = oauth2.accessToken.create(req.cookies.mbtoken);
 
-    // TODO: refactor into utility module and use in auth middleware
-    token.refresh().then(function(new_token){
-      models.User.find({where: {
-        monzo_user_id: req.cookies.mbmz_usrid}
-      }).then((result) => {
-        result.updateAttributes({
-          monzo_token: new_token
+    if (token.expired()) {
+      // TODO: refactor into utility module and use in auth middleware
+      token.refresh().then(function(new_token){
+        const refreshed_token = oauth2.accessToken.create(new_token.token);
+        models.User.find({where: {
+          monzo_user_id: req.cookies.mbmz_usrid}
         }).then((result) => {
-          res.cookie('mbtoken', new_token);
-          res.redirect('/transactions');  
+          result.updateAttributes({
+            monzo_token: refreshed_token
+          }).then((result) => {
+            res.cookie('mbtoken', refreshed_token);
+            res.redirect('/transactions');  
+          });
         });
       });
-    });
+    }
   }
 });
 
