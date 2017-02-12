@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
     res.redirect(authorizationUri);
   } else {
     // Refresh token the redirect to transaction
-    const token = oauth2.accessToken.create(req.cookies.mbtoken);
+    const token = oauth2.accessToken.create(req.cookies.mbtoken.token);
 
     if (token.expired()) {
       // TODO: refactor into utility module and use in auth middleware
@@ -48,6 +48,8 @@ router.get('/', (req, res) => {
           });
         });
       });
+    } else {
+      res.redirect('/transactions');
     }
   }
 });
