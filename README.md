@@ -1,7 +1,7 @@
 # Monzo Web Client
 Monzo Web client built with node, express, postgres. Current allows viewing transaction history as a list and exporting. Also has view for indiviual transactions. Plans to add budgeting features per category similar to Monzo iOS app. Currently WIP. 
 
-https://monzo-web-client.herokuapp.com/
+All commits to master branch current get deploy to https://monzo-web-client-dev.herokuapp.com/
 
 ## Building & Running
 
