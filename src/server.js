@@ -8,9 +8,9 @@ var path = require('path');
 var express = require('express');  
 var bodyParser = require('body-parser');
 var logger = require('morgan');
+var helmet = require('helmet');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var authMiddleware = require('./middleware/auth');
 
 const app = express();
 
@@ -18,11 +18,30 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(helmet())
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser(process.env.SECRET));
-app.use(cookieParser());
+app.use(cookieParser(process.env.SECRET));
+app.use(express.static(path.join(__dirname, '..', 'public'))); // Setup static file hanlding for public css/js/img files
+
+app.get('/', function(req, res){
+    res.render('index');
+});
+
+// Get Routes & Auth middleware 
+var authRoute = require('./routes/auth')
+var endpointRoute =  require('./routes/endpoints');
+var transactionRoute = require('./routes/transactions');
+var authMiddleware = require('./middleware/auth');
+
+// Protect Routes that require auth middleware
+transactionRoute.use([authMiddleware]);
+
+// Register Routes
+app.use('/auth', authRoute);
+app.use('/endpoints', endpointRoute); 
+app.use('/transactions', transactionRoute);
 
 // Setup error handling, dont display full error in production
 if (app.get('env') === 'development') {
@@ -46,24 +65,6 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
-// Setup static file hanlding for public css/js/img files
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
-app.get('/', function(req, res){
-    res.render('index');
-});
-
-// Register Routes
-// Both of these below routes need to be public and not use authentication
-app.use('/auth', require('./routes/auth'));
-app.use('/endpoints', require('./routes/endpoints')); 
-
-//Register auth middleware, only used for below routes
-app.use([authMiddleware]);
-
-//secured routes
-app.use('/transactions', require('./routes/transactions'));
 
 //404 handling
 app.use(function (req, res, next) {

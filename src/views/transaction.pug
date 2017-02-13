@@ -2,6 +2,7 @@ extends ./shared/layout
 
 append styles 
   link(href='/css/transaction.css' rel='stylesheet')
+  link(href='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css' rel='stylesheet' media='screen')
 
 block content
   .main-container
@@ -22,11 +23,22 @@ block content
         span.transaction-website 
           a(href=transaction.merchant.metadata.foursquare_website) #{transaction.merchant.metadata.foursquare_website}
 
+        .container.gallery-container
+          .row
+            .list-group.gallery
+              each attachment in transaction.attachments
+                .col-sm-4.col-xs-6.col-md-3.col-lg-3
+                  a.thumbnail.fancybox(rel='ligthbox', href=attachment.url)
+                    img.img-responsive(alt='', src=attachment.url)
+              
 append scripts
+  script(src='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js')
+
   script.
     if ($('.transaction-notes').html() == ''){
       $('.transaction-notes').hide()
     }
+
   script. 
       var map;
       var infowindow;
@@ -62,3 +74,14 @@ append scripts
       }
       
   script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcusw1j-6AajYdM2N3C64-vOvhYOprESw&libraries=places&callback=initMap")
+
+  script.
+    $(document).ready(function(){
+        //FANCYBOX
+        //https://github.com/fancyapps/fancyBox
+        $(".fancybox").fancybox({
+            openEffect: "none",
+            closeEffect: "none", 
+            type:"image"
+        });
+    });
