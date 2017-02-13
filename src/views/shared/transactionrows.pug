@@ -1,0 +1,5 @@
+include transactionrow
+
+mixin transactionrows(transactions)
+  each transaction in transactions
+    +transactionrow(transaction)

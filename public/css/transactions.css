@@ -25,6 +25,17 @@
   width:100%;
 }
 
+.buttonbar {
+  float:right;
+}
+
+.load-more {
+  display: inline-block;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+}
+
 @media(min-width: 970px){
   .table-container, .balance-container { 
     max-width: 700px;

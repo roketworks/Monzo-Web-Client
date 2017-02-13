@@ -1,5 +1,7 @@
 extends ./shared/layout
 
+include ./shared/transactionrows
+
 append styles 
   link(href='/css/transactions.css', rel='stylesheet')
 
@@ -8,10 +10,14 @@ block content
     .balance-container.container-fluid
       .row
         span#current-balance Current Balance: #{balance}
+        span.buttonbar
+          button(type="button" aria-label="Left Align")#exportbtn.btn.btn-default
+            span(aria-hidden="true").glyphicon.glyphicon-export
+            span  Export          
         
     hr
     h3 Transactions
-    table.table.table-hover
+    table#transaction-table.table.table-hover
       thead
         tr
           th Category
@@ -21,28 +27,35 @@ block content
           th Balance
           th
       tbody
-        each transaction in transactions
-          tr
-            td= transaction.categoryDisplayName
-            td= transaction.displayDate
-            td= transaction.description
-            td= transaction.displayAmount
-            td= transaction.displayBalance
-            td 
-              a(href='/transactions/' + transaction.id) view
+        +transactionrows(transactions)
   
     nav.aria-label
       ul.pager
-        li#previous.previous
-          a(href="/transactions")
-            span(aria-hidden="true") &larr; Newer
         li#next.next
-          a(href="/transactions?" + older_query)  
-            .span(aria-hidden="true") Older &rarr;
+          .span(aria-hidden="true").load-more 
+            button#load-btn.btn.btn-link
+              span(aria-hidden="true").glyphicon.glyphicon-chevron-down
       
 append scripts 
   script.
-    var isBefore = $.urlParam('before'); 
-    if (!isBefore) {
-      $('#previous').addClass('disabled');
-    }
+    $('#load-btn').click(function(){
+      var before_param = $('#transaction-table tr:last .datedisplay').data('date'); 
+      $.ajax({
+        method: 'GET',
+        url: '/transactions/loadmore', 
+        data: {before: before_param},
+        success: function(result){
+          //console.log(result);
+          $('#transaction-table > tbody:last-child').append(result);
+        }
+      });
+    });
+    $('#exportbtn').click(function(e){
+      var row = $('#transaction-table > tbody tr:first');
+      var first_date = $('#transaction-table > tbody tr:first .datedisplay').data('date'); 
+      var last_date = $('#transaction-table tr:last .datedisplay').data('date');
+      var params = {before: first_date, since: last_date};
+      var querystr = $.param(params);
+      e.preventDefault();  //stop the browser from following
+      window.location.href = '/transactions/export?' + querystr; 
+    });

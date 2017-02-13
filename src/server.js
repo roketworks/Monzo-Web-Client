@@ -35,13 +35,10 @@ var endpointRoute =  require('./routes/endpoints');
 var transactionRoute = require('./routes/transactions');
 var authMiddleware = require('./middleware/auth');
 
-// Protect Routes that require auth middleware
-transactionRoute.use([authMiddleware]);
-
 // Register Routes
 app.use('/auth', authRoute);
 app.use('/endpoints', endpointRoute); 
-app.use('/transactions', transactionRoute);
+app.use('/transactions', authMiddleware, transactionRoute);
 
 // Setup error handling, dont display full error in production
 if (app.get('env') === 'development') {

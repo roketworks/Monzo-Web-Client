@@ -19,8 +19,9 @@ block content
           span.transaction-category #{transaction.displayCategory} #[br] 
           span.transaction-fscategory #{transaction.merchant.metadata.foursquare_category}
         address #{transaction.merchant.address.formatted} #[br]
-        span.transaction-notes #{transaction.notes}
-        span.transaction-website 
+        .transaction-notes 
+          span #{transaction.notes} 
+        .transaction-website 
           a(href=transaction.merchant.metadata.foursquare_website) #{transaction.merchant.metadata.foursquare_website}
 
         .container.gallery-container
@@ -35,7 +36,7 @@ append scripts
   script(src='//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js')
 
   script.
-    if ($('.transaction-notes').html() == ''){
+    if ($('.transaction-notes > span').html() == ''){
       $('.transaction-notes').hide()
     }
 

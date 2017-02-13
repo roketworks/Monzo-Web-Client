@@ -1,0 +1,10 @@
+mixin transactionrow(transaction) 
+  tr
+    td= transaction.categoryDisplayName
+    td(data-date=transaction.created).datedisplay #{transaction.displayDate}
+    td= transaction.description
+    td= transaction.displayAmount
+    td= transaction.displayBalance
+    td 
+      a(href='/transactions/' + transaction.id) 
+        span.glyphicon.glyphicon-link
