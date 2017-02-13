@@ -37,8 +37,12 @@ block content
               span(aria-hidden="true").glyphicon.glyphicon-chevron-down
       
 append scripts 
+  script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js')
+  script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js')
   script.
     $('#load-btn').click(function(){
+      $('#load-btn').addClass('disabled');
+      $('#transaction-table').LoadingOverlay("show");
       var before_param = $('#transaction-table tr:last .datedisplay').data('date'); 
       $.ajax({
         method: 'GET',
@@ -47,6 +51,8 @@ append scripts
         success: function(result){
           //console.log(result);
           $('#transaction-table > tbody:last-child').append(result);
+          $('#load-btn').removeClass('disabled');
+          $('#transaction-table').LoadingOverlay("hide", true);
         }
       });
     });
