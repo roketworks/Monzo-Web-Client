@@ -5,7 +5,7 @@ All commits to master branch current get deploy to https://monzo-web-client-dev.
 
 ## Building & Running
 
-Before you start you will need to have obained a client key & secret from the [Monzo developer dashboard](https://developers.getmondo.co.uk)
+Before you start you will need to have obained a client key & secret from the [Monzo developer dashboard](https://developers.getmondo.co.uk) and a local postgres database. 
 
 1. Download or clone repository
 2. Create .env file in root directory based on sample.env (populate with your own configuration values)
