@@ -48,30 +48,47 @@ append scripts
         var centre = {lat: #{transaction.merchant.address.latitude}, lng: #{transaction.merchant.address.longitude}};        
         map = new google.maps.Map(document.getElementById('map'), {
           center: centre,
-          zoom: 18
+          zoom: 17
         });
 
         infowindow = new google.maps.InfoWindow();
         var service = new google.maps.places.PlacesService(map);
 
-        service.getDetails({
-          placeId: '#{transaction.merchant.metadata.google_places_id}'
-        }, function(place, status) {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            var marker = new google.maps.Marker({
-              map: map,
-              position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function() {
-              infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-                'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
-                '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
-                '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
-                '</div>');
-              infowindow.open(map, this);
-            });
-          }
-        });
+        // TODO: Refactor
+        var place_id = '#{transaction.merchant.metadata.google_places_id}'; 
+        if (place_id == '') { 
+          var marker = new google.maps.Marker({
+            map: map,
+            position: {lat: #{transaction.merchant.address.latitude}, lng: #{transaction.merchant.address.longitude}}
+          });
+          google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent('<div><strong>' + '#{transaction.merchant.name}' + '</strong><br>' +
+                  'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
+                  '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
+                  '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
+                  '</div>');
+                infowindow.open(map, this);
+              });
+        } else {
+          service.getDetails({
+            placeId: '#{transaction.merchant.metadata.google_places_id}'
+          }, function(place, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+              });
+              google.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                  'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
+                  '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
+                  '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
+                  '</div>');
+                infowindow.open(map, this);
+              });
+            }
+          });
+        }
       }
       
   script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcusw1j-6AajYdM2N3C64-vOvhYOprESw&libraries=places&callback=initMap")

@@ -10,6 +10,7 @@ body {
 .navbar {
   background-color: #16243b;
   padding-top: 30px;
+  z-index: 9999;
 }
 
 .navbar-inverse .navbar-brand {

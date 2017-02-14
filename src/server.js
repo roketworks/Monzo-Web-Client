@@ -33,12 +33,14 @@ app.get('/', function(req, res){
 var authRoute = require('./routes/auth')
 var endpointRoute =  require('./routes/endpoints');
 var transactionRoute = require('./routes/transactions');
+var mapRoute = require('./routes/map');
 var authMiddleware = require('./middleware/auth');
 
 // Register Routes
 app.use('/auth', authRoute);
 app.use('/endpoints', endpointRoute); 
 app.use('/transactions', authMiddleware, transactionRoute);
+app.use('/map', authMiddleware, mapRoute);
 
 // Setup error handling, dont display full error in production
 if (app.get('env') === 'development') {

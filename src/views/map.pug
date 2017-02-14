@@ -1,0 +1,126 @@
+extends ./shared/layout
+
+append styles
+  link(href='/css/map.css' rel='stylesheet')
+  link(href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css' rel='stylesheet')
+  style. 
+    #ui-datepicker-div{z-index:9999 !important}
+
+block content
+  .main-container
+    .map-container
+      div#map
+  
+append scripts 
+  script(src='/js/accounting.js')
+  script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js')
+  script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js')
+  script.
+     $('.main-container').LoadingOverlay("show", {color: 'rgba(22,36,59, .6)', image: '/img/rolling.svg', zIndex: 1000});
+    var map;
+    function initialize() {
+      $.ajax({
+        method: 'GET',
+        url: '/map/json', 
+        success: function(result){
+          map = new google.maps.Map(document.getElementById('map'), {
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          });
+
+          var infowindow = new google.maps.InfoWindow();
+
+          var bounds = new google.maps.LatLngBounds();
+
+          /*var centerControlDiv = document.createElement('div');
+          var centerControl = new CenterControl(centerControlDiv, map);
+          centerControlDiv.index = 1;
+          map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);*/
+
+          var locations = [];
+          for (var i =0; i < result.length; i++){
+            var existingObj = locations.find(function(el){
+                return el.merchant.id == result[i].merchant.id;
+              });
+
+            var obj = result[i];
+            if (existingObj === undefined) {
+              locations.push({
+                merchant: obj.merchant,
+                total: obj.amount,
+                transactions: [obj] 
+              });
+            } else {
+              existingObj.total = existingObj.total + obj.amount;
+              existingObj.transactions.push(obj);
+            }
+          }
+
+          for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+              position: new google.maps.LatLng(locations[i].merchant.address.latitude, locations[i].merchant.address.longitude),
+              label: locations[i].merchant.emoji,
+              map: map
+            });
+
+            bounds.extend(marker.position);
+
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+              return function () {
+                infowindow.setContent('<div><strong>' + locations[i].merchant.name + '</strong><br>' +
+                  locations[i].merchant.metadata.foursquare_category + '<br/>' +
+                  'Transactions: ' + locations[i].transactions.length + '<br/>' +
+                  'Total Spent: ' + accounting.formatMoney(Math.abs(locations[i].total/100), "£", 2) + '<br/>' +
+                  '</div>');
+                infowindow.open(map, marker);
+              }
+            })(marker, i));
+          }
+          $('.main-container').LoadingOverlay("hide");
+         
+          map.fitBounds(bounds);
+         
+         /*
+          $('#datepicker').datepicker({
+            endDate: "-today",
+            autoclose: true,
+            todayHighlight: true
+          });*/
+        }
+      });
+    }
+     /*function CenterControl(controlDiv, map) {
+
+      // Set CSS for the control border.
+      var controlUI = document.createElement('div');
+      controlUI.id = "datepicker";
+      controlUI.className = "input-daterange input-group";
+      controlUI.style.backgroundColor = '#fff';
+      controlUI.style.border = '2px solid #fff';
+      controlUI.style.borderRadius = '3px';
+      controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+      controlUI.style.cursor = 'pointer';
+      controlUI.style.marginBottom = '22px';
+      controlUI.style.textAlign = 'center';
+      controlUI.style.maxWidth = '720px'
+      controlUI.title = 'Click to recenter the map';
+      controlUI.innerHTML = '<input type="text" class="input-sm form-control" name="start" /><span class="input-group-addon">to</span><input type="text" class="input-sm form-control" name="end" />'
+      controlDiv.appendChild(controlUI);
+
+      // Set CSS for the control interior.
+      //var controlInput = document.createElement('div');
+      //controlText.style.color = 'rgb(25,25,25)';
+      //controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+      //controlText.style.fontSize = '16px';
+      //controlText.style.lineHeight = '38px';
+      //controlText.style.paddingLeft = '5px';
+      //controlText.style.paddingRight = '5px';
+      //controlText.innerHTML = 'Center Map';
+      //controlUI.appendChild(controlText);
+
+      // Setup the click event listeners: simply set the map to Chicago.
+      //controlUI.addEventListener('click', function() {
+      //  map.setCenter();
+      //});
+    }*/
+  script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcusw1j-6AajYdM2N3C64-vOvhYOprESw&?v=3&libraries=places&callback=initialize")
