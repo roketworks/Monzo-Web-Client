@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/roketworks/Monzo-Web-Client.svg?branch=master)](https://travis-ci.org/roketworks/Monzo-Web-Client)
 # Monzo Web Client
 Monzo Web client built with node, express, postgres. Current allows viewing transaction history as a list and exporting. Also has view for indiviual transactions. Plans to add budgeting features per category similar to Monzo iOS app. Currently WIP. 
 
