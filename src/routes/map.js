@@ -14,6 +14,7 @@ router.get('/', function(req, res, next){
 });
 
 // TODO include in api refactor 
+// Code can be shared with transaction route because thats where I copied most of it from... 
 router.get('/json', function(req, res, next){
   models.User.find({
     where: {monzo_user_id: req.cookies.mbmz_usrid }

@@ -1,6 +1,7 @@
 const simpleOauthModule = require('simple-oauth2');
 var models = require('../models/index');
 
+// TODO :refactor into shared code with auth route
 const oauth2 = simpleOauthModule.create({
   client: {
     id: process.env.MONZO_OAUTH_CLIENT_ID,

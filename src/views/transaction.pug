@@ -59,16 +59,18 @@ append scripts
         if (place_id == '') { 
           var marker = new google.maps.Marker({
             map: map,
+            label: '#{transaction.merchant.emoji}',
             position: {lat: #{transaction.merchant.address.latitude}, lng: #{transaction.merchant.address.longitude}}
           });
           google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent('<div><strong>' + '#{transaction.merchant.name}' + '</strong><br>' +
-                  'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
-                  '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
-                  '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
-                  '</div>');
-                infowindow.open(map, this);
-              });
+            var pname = "#{transaction.merchant.name}";
+            infowindow.setContent('<div><strong>' + pname + '</strong><br>' +
+              'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
+              '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
+              '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
+              '</div>');
+            infowindow.open(map, this);
+          });
         } else {
           service.getDetails({
             placeId: '#{transaction.merchant.metadata.google_places_id}'
@@ -76,13 +78,15 @@ append scripts
             if (status === google.maps.places.PlacesServiceStatus.OK) {
               var marker = new google.maps.Marker({
                 map: map,
+                label: '#{transaction.merchant.emoji}',
                 position: place.geometry.location
               });
-              google.maps.event.addListener(marker, 'click', function() {
-                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+              google.maps.event.addListener(marker, 'click', function() {     
+                var name = place.name;   
+                infowindow.setContent('<div><strong>' + name + '</strong><br>' +
                   'Amount: ' + '#{transaction.displayAmount}' + '<br/>' +
                   '#{transaction.merchant.metadata.foursquare_category}' + '<br/>' +
-                  '<a href="#{transaction.merchant.metadata.foursquare_website}">#{transaction.merchant.metadata.foursquare_website}</a>' + 
+                  '<a href="' + place.url + '">View on Google Maps</a>' + 
                   '</div>');
                 infowindow.open(map, this);
               });

@@ -9,7 +9,8 @@
     "initdb": "npm run -s migratedb && npm run -s seeddb",
     "run": "node src/server.js",
     "start": "npm run -s initdb & npm run -s run",
-    "start-dev": "node -r dotenv/config src/server.js"
+    "start-dev": "node -r dotenv/config src/server.js",
+    "test": ""
   },
   "author": "Mike McFarland",
   "license": "ISC",
@@ -37,5 +38,11 @@
     "sequelize": "^3.30.2",
     "sequelize-cli": "^2.5.1",
     "simple-oauth2": "^1.0.3"
+  },
+  "devDependencies": {
+    "browserify": "^14.1.0",
+    "gulp": "^3.9.1",
+    "gulp-jshint": "^2.0.4",
+    "jshint": "^2.9.4"
   }
 }

@@ -5,6 +5,7 @@ const simpleOauthModule = require('simple-oauth2');
 
 var router = express.Router();
 
+// TODO: refactor into shared code with auth middleware
 const oauth2 = simpleOauthModule.create({
   client: {
     id: process.env.MONZO_OAUTH_CLIENT_ID,

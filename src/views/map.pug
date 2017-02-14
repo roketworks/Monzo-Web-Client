@@ -16,8 +16,10 @@ append scripts
   script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js')
   script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js')
+
   script.
-     $('.main-container').LoadingOverlay("show", {color: 'rgba(22,36,59, .6)', image: '/img/rolling.svg', zIndex: 1000});
+    $('.main-container').LoadingOverlay("show", {color: 'rgba(22,36,59, .6)', image: '/img/rolling.svg', zIndex: 1000});
+
     var map;
     function initialize() {
       $.ajax({
@@ -29,7 +31,6 @@ append scripts
           });
 
           var infowindow = new google.maps.InfoWindow();
-
           var bounds = new google.maps.LatLngBounds();
 
           /*var centerControlDiv = document.createElement('div');
