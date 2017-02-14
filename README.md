@@ -7,5 +7,5 @@ Before you start you will need to have obained a client key & secret from the [M
 
 1. Download or clone repository
 2. Create .env file in root directory based on sample.env (populate with your own configuration values)
-3. Run `npm run -s initdb` This will run the sequelize orm dataabse migration and seeding against the connection string set in your .env file 
-4. Run `npm run` to run, by default it will listen on port 8081. Alternatively, if you have opened the project in Visual Studio Code you can select the 'Launch Program' debug option to start a new instance. 
+3. Run `npm run -s initdb` in the root folder of the project. This will run the sequelize orm database migration and seeding against the connection string set in your .env file 
+4. Run `npm run` in the root folder of the project to run, by default it will listen on port 8081. Alternatively, if you have opened the project in Visual Studio Code you can select the 'Launch Program' debug option to start a new instance. 
