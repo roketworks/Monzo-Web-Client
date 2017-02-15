@@ -19,6 +19,7 @@ const oauth2 = simpleOauthModule.create({
 
 // TODO: possible implement bearer token to fallback onto cookies for rest
 module.exports = function(req, res, next){
+  console.log('session: ' + req.session);
   var tokenObject = req.session.mbtoken;
   var monzo_userid = req.session.mbmz_usrid;
 
