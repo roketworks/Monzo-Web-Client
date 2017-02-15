@@ -17,7 +17,7 @@ router.get('/', function(req, res, next){
 // Code can be shared with transaction route because thats where I copied most of it from... 
 router.get('/json', function(req, res, next){
   models.User.find({
-    where: {monzo_user_id: req.cookies.mbmz_usrid }
+    where: {monzo_user_id: req.session.mbmz_usrid }
   }).then(function(user){
     var before_param, since_param;
 

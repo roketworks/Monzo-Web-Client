@@ -27,24 +27,24 @@ const authorizationUri = oauth2.authorizationCode.authorizeURL({
 
 // Initial page redirecting to Monzo
 router.get('/', (req, res) => {
-  if (req.cookies.mbtoken === undefined){
+  if (req.session.mbtoken === undefined){
     console.log(authorizationUri);
     res.redirect(authorizationUri);
   } else {
     // Refresh token the redirect to transaction
-    const token = oauth2.accessToken.create(req.cookies.mbtoken.token);
+    const token = oauth2.accessToken.create(req.session.mbtoken.token);
 
     if (token.expired()) {
       // TODO: refactor into utility module and use in auth middleware
       token.refresh().then(function(new_token){
         const refreshed_token = oauth2.accessToken.create(new_token.token);
         models.User.find({where: {
-          monzo_user_id: req.cookies.mbmz_usrid}
+          monzo_user_id: req.session.mbmz_usrid}
         }).then((result) => {
           result.updateAttributes({
             monzo_token: refreshed_token
           }).then((result) => {
-            res.cookie('mbtoken', refreshed_token);
+            req.session.mbtoken = refreshed_token;
             res.redirect('/transactions');  
           });
         });
@@ -81,8 +81,8 @@ router.get('/redirect', (req, res, next) => {
         user.updateAttributes({
           monzo_token: token
         }).then(function(user){
-          res.cookie('mbmz_usrid', result.user_id)
-          res.cookie('mbtoken', token);
+          req.session.mbmz_usrid = result.user_id;
+          req.session.mbtoken = token;
           return res.redirect('/transactions');
         });
       } else {
@@ -103,8 +103,8 @@ router.get('/redirect', (req, res, next) => {
             monzo_user_id: result.user_id
           }).then(function(user){
             if (user){
-              res.cookie('mbmz_usrid', result.user_id)
-              res.cookie('mbtoken', token);
+              req.session.mbmz_usrid = result.user_id;
+              req.session.mbtoken = token;
               return res.redirect('/transactions');
             } else {
               //return res.status(500).json({"message": "error occuring saving user details"});

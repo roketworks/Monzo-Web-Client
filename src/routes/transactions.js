@@ -15,7 +15,7 @@ router.get('/', function(req, res, next){
   // Load account id
   // Using cookies for user id information here, dont really care about it not being restful
   models.User.find({
-    where: {monzo_user_id: req.cookies.mbmz_usrid }
+    where: {monzo_user_id: req.session.mbmz_usrid }
   }).then(function(user){
     var before_param, since_param;
 
@@ -106,7 +106,7 @@ router.get('/loadmore', function(req, res, next){
   } 
 
   models.User.find({
-    where: {monzo_user_id: req.cookies.mbmz_usrid }
+    where: {monzo_user_id: req.session.mbmz_usrid }
   }).then(function(user){
     const access_token = user.monzo_token.token.access_token;
     const options = {  
@@ -159,7 +159,7 @@ router.get('/export', function(req, res, next){
   } 
 
   models.User.find({
-    where: {monzo_user_id: req.cookies.mbmz_usrid }
+    where: {monzo_user_id: req.session.mbmz_usrid }
   }).then(function(user){
     const access_token = user.monzo_token.token.access_token;
     const options = {  
