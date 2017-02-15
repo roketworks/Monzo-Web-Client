@@ -1,9 +1,10 @@
-var json2csv = require('json2csv');
+'use strict';
 
-var exportUtil = {
-  exportTransactionList(transactions){
-    var json2csv = require('json2csv');
-    var fields = [
+const json2csv = require('json2csv');
+
+const exportUtil = {
+  exportTransactionList: (transactions) => {
+    const fields = [
       {label: 'Created', value: 'created'}, 
       {label: 'Category', value: 'displayCategory'},
       {label: 'Description', value: 'description'},
@@ -15,7 +16,7 @@ var exportUtil = {
       {label: 'Notes', value: 'notes'}
     ];
 
-    var csv = json2csv({data: transactions, fields: fields});
+    const csv = json2csv({data: transactions, fields: fields});
     return csv;
   }
 };

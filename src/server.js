@@ -27,10 +27,8 @@ const sess = {
 }
 
 if (app.get('env') === 'production') {
-  //const client = redis.createClient({url: process.env.REDIS_URL});
-  //sess.store = new RedisStore({client: client});
+  // TODO: look at secure cookies only, possobily need to set proxy options when running on herkou
   sess.store = new RedisStore({url: process.env.REDIS_URL});
-  //sess.cookie.secure = true;
 }
 
 app.use(helmet());
@@ -59,7 +57,7 @@ app.use('/map', authMiddleware, mapRoute);
 
 // Setup error handling, dont display full error in production
 if (app.get('env') === 'development') {
-  app.use(function (err, req, res) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       status: err.status || 500,
@@ -70,7 +68,7 @@ if (app.get('env') === 'development') {
 } else {
   // production error handler
   // no stacktraces leaked to user
-  app.use(function (err, req, res) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       status: err.status || 500,

@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs');
 const express = require('express');
 const querystring = require('querystring');
@@ -68,33 +70,5 @@ router.get('/json', function(req, res, next){
       });
   });  
 });
-
-function getTransactionDisplayName(name){
-  switch(name){
-    case "monzo":
-    case "mondo":
-      return "Monzo";
-     case "general":
-      return "General";
-     case "eating_out":
-      return "Eating Out";
-     case "expenses":
-      return "Expenses";
-     case "transport":
-      return "Transport";
-     case "cash":
-      return "Cash";
-     case "bills":
-      return "Bills";
-     case "entertainment":
-      return "Entertainment";
-     case "shopping":
-      return "Shopping";
-     case "holidays":
-      return "Holidays";
-     case "groceries":
-      return "Groceries";
-  }
-}
 
 module.exports = router;

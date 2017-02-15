@@ -1,60 +1,39 @@
 'use strict';
 
 const express = require('express');
+const Promise = require('bluebird');
 const request = require('request-promise');
-const models = require('../models/index'); 
-const simpleOauthModule = require('simple-oauth2');
+const authUtil = require('../utils/authUtil');
+const monzoUtil = require('../utils/monzoUtil');
 
 const router = express.Router();
 
 // TODO: refactor into shared code with auth middleware
-const oauth2 = simpleOauthModule.create({
-  client: {
-    id: process.env.MONZO_OAUTH_CLIENT_ID,
-    secret: process.env.MONZO_OAUTH_CLIENT_SECRET,
-  },
-  auth: {
-    tokenHost: 'https://api.getmondo.co.uk',
-    tokenPath: '/oauth2/token',
-    authorizeHost: 'https://auth.getmondo.co.uk',
-    authorizePath: '/'
-  },
-});
-
-// Authorization uri definition
-const authorizationUri = oauth2.authorizationCode.authorizeURL({
-  redirect_uri: process.env.MONZO_OAUTH_REDIRECT_URL,
-  state: process.env.MONZO_OAUTH_STATE
-});
+const oauth2 = authUtil.createOAuthModule();
+const authorizationUri = authUtil.getAuthorizationUrl(oauth2);
 
 // Initial page redirecting to Monzo
 router.get('/', (req, res) => {
-  if (req.session.mbtoken === undefined){
+  const sessionData = authUtil.getSessionData(req);
+  if (sessionData.token === undefined){
     console.log(authorizationUri);
-    res.redirect(authorizationUri);
-  } else {
-    // Refresh token the redirect to transaction
-    const token = oauth2.accessToken.create(req.session.mbtoken.token);
+    return res.redirect(authorizationUri);
+  } 
+  // Refresh token the redirect to transaction
+  const token = oauth2.accessToken.create(req.session.mbtoken.token);
 
-    if (token.expired()) {
-      // TODO: refactor into utility module and use in auth middleware
-      token.refresh().then(function(new_token){
-        const refreshed_token = oauth2.accessToken.create(new_token.token);
-        models.User.find({where: {
-          monzo_user_id: req.session.mbmz_usrid}
-        }).then((result) => {
-          result.updateAttributes({
-            monzo_token: refreshed_token
-          }).then((result) => {
-            req.session.mbtoken = refreshed_token;
-            res.redirect('/transactions');  
-          });
-        });
+  if (token.expired()) {
+    // TODO: refactor into utility module and use in auth middleware
+    token.refresh().then((new_token) => {
+      const refreshed_token = oauth2.accessToken.create(new_token.token);
+      authUtil.updateUserToken(req.session.mbmz_usrid, refreshed_token).then((result) => {
+        req.session.mbtoken = refreshed_token;
+        return res.redirect('/transactions');  
       });
-    } else {
-      res.redirect('/transactions');
-    }
-  }
+    });
+  } 
+
+  res.redirect('/transactions');
 });
 
 // Callback service parsing the authorization token and asking for the access token
@@ -68,14 +47,33 @@ router.get('/redirect', (req, res, next) => {
   oauth2.authorizationCode.getToken(options, (error, result) => {
     if (error) {
       console.error('Access Token Error', error.message);
-      return res.json('Authentication failed');
+      return next({status: 401, message: "Monzo Authenication failed", error: error});
     }
 
     const token = oauth2.accessToken.create(result);
+    const user_id = result.user_id;
 
     // Save/update token & monzo user details
     // Todo, encrypt token storage
-    models.User.find({where: {
+    authUtil.updateUserToken(user_id, token).then((result) => {
+      // User exists and has been updated
+      if (result) {
+        authUtil.setSessionData(req, user_id, token);
+        return res.redirect('/transactions'); 
+      }
+      
+      // result is null user did not exist 
+      // need to lookup account id and save user token
+      createUser(user_id, token).then(() => {
+        authUtil.setSessionData(req, user_id, token);
+        return res.redirect('/transactions');
+      }).catch((err) => {
+        // TODO: check error hanlding
+        return next(err);
+      });
+    });
+
+    /*models.User.find({where: {
         monzo_user_id: result.user_id
       }
     }).then(function(user){
@@ -109,7 +107,6 @@ router.get('/redirect', (req, res, next) => {
               req.session.mbtoken = token;
               return res.redirect('/transactions');
             } else {
-              //return res.status(500).json({"message": "error occuring saving user details"});
               return next({
                 status: 500,
                 message: "Error occuring saving user details.",
@@ -126,8 +123,18 @@ router.get('/redirect', (req, res, next) => {
           });
         });      
       }
-    });  
+    }); */ 
   });
 });
+
+const createUser = (user_id, token) => {
+  return new Promise((resolve, reject) => {
+    monzoUtil.getAccountId(token.token.access_token).then((acc_id) => {
+      authUtil.createUserSaveToken(user_id, acc_id, token).then(() => {
+        resolve();
+      });  
+    }).catch((err) => { reject(err); });
+  });
+}
 
 module.exports = router;
