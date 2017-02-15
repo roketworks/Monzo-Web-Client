@@ -27,8 +27,9 @@ const sess = {
 }
 
 if (app.get('env') === 'production') {
-  const client = redis.createClient({url: process.env.REDIS_URL});
-  sess.store = new RedisStore({client: client});
+  //const client = redis.createClient({url: process.env.REDIS_URL});
+  //sess.store = new RedisStore({client: client});
+  sess.store = new RedisStore({url: process.env.REDIS_URL});
   sess.cookie.secure = true;
 }
 
