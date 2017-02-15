@@ -10,7 +10,6 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const redis = require('redis');
 const RedisStore = require('connect-redis')(session);
 
