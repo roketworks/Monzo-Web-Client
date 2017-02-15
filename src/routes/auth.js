@@ -1,9 +1,11 @@
-var express = require('express');
-var request = require('request-promise');
-var models = require('../models/index'); 
+'use strict';
+
+const express = require('express');
+const request = require('request-promise');
+const models = require('../models/index'); 
 const simpleOauthModule = require('simple-oauth2');
 
-var router = express.Router();
+const router = express.Router();
 
 // TODO: refactor into shared code with auth middleware
 const oauth2 = simpleOauthModule.create({
@@ -95,7 +97,7 @@ router.get('/redirect', (req, res, next) => {
         }; 
 
         request(acc_req_options).then(function(accounts){
-          var account_id = accounts.accounts[0].id;
+          const account_id = accounts.accounts[0].id;
 
           models.User.create({
             monzo_token: token, 

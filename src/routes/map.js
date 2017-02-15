@@ -1,13 +1,13 @@
-var fs = require('fs');
-var express = require('express');
-var querystring = require('querystring');
-var request = require('request-promise');
-var accounting = require('accounting');
-var moment = require('moment');
-var exportUtils = require('../utils/exportUtil');
+const fs = require('fs');
+const express = require('express');
+const querystring = require('querystring');
+const request = require('request-promise');
+const accounting = require('accounting');
+const moment = require('moment');
+const exportUtils = require('../utils/exportUtil');
 
-var models = require('../models/index');
-var router = express.Router();
+const models = require('../models/index');
+const router = express.Router();
 
 router.get('/', function(req, res, next){
   return res.render('map');
@@ -19,7 +19,7 @@ router.get('/json', function(req, res, next){
   models.User.find({
     where: {monzo_user_id: req.session.mbmz_usrid }
   }).then(function(user){
-    var before_param, since_param;
+    let before_param, since_param;
 
     if (req.query.before === undefined) {
       before_param = moment().toISOString(); 

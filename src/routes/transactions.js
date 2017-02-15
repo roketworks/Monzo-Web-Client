@@ -1,13 +1,13 @@
-var fs = require('fs');
-var express = require('express');
-var querystring = require('querystring');
-var request = require('request-promise');
-var accounting = require('accounting');
-var moment = require('moment');
-var exportUtils = require('../utils/exportUtil');
+const fs = require('fs');
+const express = require('express');
+const querystring = require('querystring');
+const request = require('request-promise');
+const accounting = require('accounting');
+const moment = require('moment');
+const exportUtils = require('../utils/exportUtil');
 
-var models = require('../models/index');
-var router = express.Router();
+const models = require('../models/index');
+const router = express.Router();
 
 // TODO: refactor monzo api calls into module/utility
 
@@ -17,7 +17,7 @@ router.get('/', function(req, res, next){
   models.User.find({
     where: {monzo_user_id: req.session.mbmz_usrid }
   }).then(function(user){
-    var before_param, since_param;
+    let before_param, since_param;
 
     if (req.query.before === undefined) {
       before_param = moment().toISOString(); 
@@ -69,8 +69,8 @@ router.get('/', function(req, res, next){
         request(balanceOptions)
           .then(function(balance){
             // Todo: support other current/symbols
-            var formattedBalance = accounting.formatMoney(balance.balance/100, {symbol: '£'});
-            var formattedSpend= accounting.formatMoney(balance.spend_today/100, {symbol: '£'});
+            const formattedBalance = accounting.formatMoney(balance.balance/100, {symbol: '£'});
+            const formattedSpend= accounting.formatMoney(balance.spend_today/100, {symbol: '£'});
             return res.render('transactions', {
               "balance": formattedBalance,
               "spend_today": balance.spend_today,
@@ -91,7 +91,7 @@ router.get('/', function(req, res, next){
 
 // This is pure dirt, but was quicker than rewriting jade template to be rendered in pure html via jquery
 router.get('/loadmore', function(req, res, next){
-  var before_param, since_param;
+  let before_param, since_param;
 
   if (req.query.before === undefined) {
     before_param = moment().toISOString(); 
@@ -144,7 +144,7 @@ router.get('/loadmore', function(req, res, next){
 });
 
 router.get('/export', function(req, res, next){
-  var before_param, since_param;
+  let before_param, since_param;
 
   if (req.query.before === undefined) {
     before_param = moment().toISOString(); 
@@ -201,7 +201,7 @@ router.get('/:trans_id', function(req, res, next){
   const options = {
     method: 'GET',
     uri: process.env.MONZO_API_ENDPOINT + '/transactions/' + req.params.trans_id,
-    auth:{bearer: req.cookies.mbtoken.token.access_token},
+    auth:{bearer: req.session.mbtoken.token.access_token},
     qs: { "expand[]": "merchant" },
     qsStringifyOptions: { encode: false },
     json: true    
@@ -209,7 +209,7 @@ router.get('/:trans_id', function(req, res, next){
 
   request(options)
     .then(function(transaction_reponse) {
-      var transaction = transaction_reponse.transaction;
+      const transaction = transaction_reponse.transaction;
       transaction.displayCategory = getTransactionDisplayName(transaction.category);
       transaction.displayDate = new Date(transaction.created).toLocaleString(); 
       transaction.displayBalance = accounting.formatMoney(transaction.account_balance/100, {symbol: '£'});

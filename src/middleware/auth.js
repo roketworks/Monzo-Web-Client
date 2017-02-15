@@ -1,3 +1,5 @@
+'use strict';
+
 const simpleOauthModule = require('simple-oauth2');
 var models = require('../models/index');
 
