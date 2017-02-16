@@ -34,7 +34,7 @@ gulp.task('sass', () => {
     .pipe(gulp.dest('./public/css'));
 }); 
 
-gulp.task('babel', () => {
+gulp.task('babel', ['cleanDist'], () => {
   return gulp.src([paths.src])
     .pipe(gulpif(!argv.production, sourcemaps.init()))
     .pipe(babel())
@@ -43,12 +43,12 @@ gulp.task('babel', () => {
     .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('views', () => {
+gulp.task('views', ['babel'], () => {
   return gulp.src([paths.views])
     .pipe(gulp.dest(paths.dist));
 });
 
-gulp.task('config', () => {
+gulp.task('config', ['views'], () => {
   return gulp.src([paths.config])
     .pipe(gulp.dest(paths.dist))
 });
@@ -61,7 +61,7 @@ gulp.task('cleanDist', function () {
 // Browserify some clientjs
 // only to be ran after babel task
 // Possibly think about running seperate babel tasks with different presets for this task
-gulp.task('clientjs', () => {
+gulp.task('clientjs', ['cleanDist'], () => {
   gulp.src(paths.clientjs)
     .pipe(browserify({standalone: 'transactionUtil'}))
     .pipe(gulp.dest('./public/js'));

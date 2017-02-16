@@ -34,7 +34,8 @@
     "redis": "^2.6.5",
     "sequelize": "^3.30.2",
     "sequelize-cli": "^2.5.1",
-    "simple-oauth2": "^1.0.3"
+    "simple-oauth2": "^1.0.3",
+    "superagent": "^3.4.3"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
