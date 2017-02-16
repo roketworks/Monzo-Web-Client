@@ -1,8 +1,7 @@
 'use strict';
 
-const models = require('../models/index'); 
-const simpleOauthModule = require('simple-oauth2');
-const Promise = require('bluebird');
+import models from '../models/index'; 
+import simpleOauthModule from 'simple-oauth2';
 
 const authUtil = {
   createOAuthModule: () => {
@@ -47,19 +46,7 @@ const authUtil = {
           }
         }).catch((err) => { reject(err); });
     });
-  }, 
-  setSessionData: (req, user_id, token) => {
-    req.session.mbmz_usrid = user_id; 
-    req.session.mbtoken = token;
-  }, 
-  getSessionData: (req) => {
-    const data = {
-      user_id: req.session.mbmz_usrid, 
-      token: req.session.token
-    };
-    
-    return data;
   }
 };
 
-module.exports = authUtil;
+export default authUtil;

@@ -1,6 +1,6 @@
 'use strict';
 
-const json2csv = require('json2csv');
+import json2csv from 'json2csv';
 
 const exportUtil = {
   exportTransactionList: (transactions) => {
@@ -21,4 +21,4 @@ const exportUtil = {
   }
 };
 
-module.exports = exportUtil;
+export default exportUtil;

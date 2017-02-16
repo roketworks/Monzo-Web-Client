@@ -1,30 +1,38 @@
-'use strict'
+'use strict';
 
 // Import development env vars from .env file
 // NOT TO BE USED IN PRODUCTION
-require('dotenv').config();
+//import {} from 'dotenv'
 
-const path = require('path');
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-const logger = require('morgan');
-const helmet = require('helmet');
-const redis = require('redis');
-const RedisStore = require('connect-redis')(session);
+import path from 'path';
+import express from 'express';
+import session from 'express-session';
+import bodyParser from 'body-parser';
+import logger from 'morgan';
+import helmet from 'helmet';
+import redis from 'connect-redis';
+
+// Get Routes & Auth middleware 
+import authRoute from './routes/auth';
+import endpointRoute from './routes/endpoints';
+import transactionRoute from './routes/transactions';
+import mapRoute from './routes/map';
+import authMiddleware from './middleware/auth';
 
 const app = express();
 
 // Setup View engine
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 const sess = {
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {path: '/', httpOnly: true}
-}
+};
+
+const RedisStore = redis(session);
 
 if (app.get('env') === 'production') {
   // TODO: look at secure cookies only, possobily need to set proxy options when running on herkou
@@ -36,18 +44,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session(sess));
-app.use(express.static(path.join(__dirname, '..', 'public'))) // Setup static file hanlding for public css/js/img files
+app.use(express.static(path.join(__dirname, '..', 'public'))); // Setup static file hanlding for public css/js/img files
 
 app.get('/', function (req, res) {
   res.render('index');
-})
-
-// Get Routes & Auth middleware 
-const authRoute = require('./routes/auth');
-const endpointRoute = require('./routes/endpoints');
-const transactionRoute = require('./routes/transactions');
-const mapRoute = require('./routes/map');
-const authMiddleware = require('./middleware/auth');
+});
 
 // Register Routes
 app.use('/auth', authRoute);

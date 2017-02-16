@@ -4,4 +4,9 @@ node_js:
 before_script:
   - npm install -g gulp
 script: 
-  - gulp lint
+  - gulp build --production
+deploy:
+  provider: heroku
+  skip_cleanup: true
+  api_key: $HEROKU_KEY
+  app

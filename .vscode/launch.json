@@ -7,8 +7,24 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Run src with maps",
       "program": "${workspaceRoot}/src/server.js",
+      "cwd": "${workspaceRoot}", 
+      "envFile": "${workspaceRoot}/.env",
+      "preLaunchTask": "build",
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "console": "internalConsole",
+      "outFiles": [ "${workspaceRoot}/dist/**/*.js" ],
+      "runtimeArgs": [
+        "--nolazy"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceRoot}/dist/server.js",
       "cwd": "${workspaceRoot}"
     },
     {
