@@ -16,7 +16,7 @@ block content
         span.transaction
           span.img-logo 
             img(src=transaction.merchant.logo).img-rounded.img-logo
-          span.transaction-category #{transaction.displayCategory} #[br] 
+          span.transaction-category #{transaction.displayCategoryName} #[br] 
           span.transaction-fscategory #{transaction.merchant.metadata.foursquare_category}
         address #{transaction.merchant.address.formatted} #[br]
         .transaction-notes 

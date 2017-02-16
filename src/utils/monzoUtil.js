@@ -73,7 +73,7 @@ const monzoUtil = {
       api.transactions(account_id, expand, pagination, access_token).then((result) => { 
         const transactions = result.transactions;
         transactions.forEach((transaction) => {
-          transactionUtil.addDisplayFields(transaction)
+          transactionUtil.addDisplayFields(transaction, false);
         });
         transactions.reverse();
         resolve(transactions); 
@@ -86,7 +86,7 @@ const monzoUtil = {
     return new Promise((resolve, reject) => {
       api.transaction(transaction_id, true, access_token).then((result) => {
         const transaction = result.transaction;
-        transactionUtil.addDisplayFields(transaction);
+        transactionUtil.addDisplayFields(transaction, true);
         resolve(transaction);  
       }).catch((err) => {
         reject(err);

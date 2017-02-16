@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Run src with maps",
+      "name": "Debug Transpiled",
       "program": "${workspaceRoot}/src/server.js",
       "cwd": "${workspaceRoot}", 
       "envFile": "${workspaceRoot}/.env",

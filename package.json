@@ -2,7 +2,7 @@
   "name": "monzo-budgeter",
   "version": "0.0.1",
   "description": "Budget helper application for Monzo",
-  "main": "src/server.js",
+  "engines" : { "node" : ">=6.0.0 <6.9.5" },
   "scripts": {
     "build": "gulp build",
     "build-babel": "./node_modules/.bin/babel src -d dist --source-maps",

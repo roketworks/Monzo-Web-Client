@@ -6,12 +6,12 @@ const util = {
   getTransactionDisplayName: (name) => {
     return getTransactionDisplayName(name);
   },
-  addDisplayFields: (transaction) => {
+  addDisplayFields: (transaction, abs) => {
     // TODO: add support for other currencys
     transaction.categoryDisplayName = getTransactionDisplayName(transaction.category);
     transaction.displayDate = new Date(transaction.created).toLocaleString();
     transaction.displayBalance = formatMoney(transaction.account_balance);
-    transaction.displayAmount = formatMoney(transaction.amount);
+    transaction.displayAmount = formatMoney(transaction.amount, abs);
   }
 }; 
 

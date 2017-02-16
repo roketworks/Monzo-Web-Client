@@ -1,10 +1,6 @@
 {
   "development": {
-    "username": "michael.mcfarland",
-    "password": null,
-    "database": "postgres",
-    "host": "localhost",
-    "dialect": "postgres", 
+    "use_env_variable": "DATABASE_URL", 
     "seederStorage": "sequelize"
   },
   "test": {
