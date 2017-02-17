@@ -1,9 +1,10 @@
 'use strict';
 
-import authUtil from '../utils/authUtil';
+import Auth from '../services/auth';
 import sessionHelper from '../utils/sessionHelper';
 
-const oauth2 = authUtil.createOAuthModule();
+const authService = new Auth();
+const oauth2 = authService.createOAuthModule();
 
 export default (req, res, next) => {
   const sessionData = sessionHelper.getSessionData(req);
@@ -18,7 +19,7 @@ export default (req, res, next) => {
     token.refresh().then((result) => {
       const refereshed_token = oauth2.accessToken.create(result.token);
 
-      authUtil.updateUserToken(sessionData.user_id, refereshed_token).then((result) => {
+      authService.updateUserToken(sessionData.user_id, refereshed_token).then((result) => {
         if (!result) {
           return next({status: 500, msg: 'Error occured', err: ''});
         }
