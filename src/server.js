@@ -11,11 +11,13 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import helmet from 'helmet';
 import redis from 'connect-redis';
+import pug from 'pug'
 
 // Get Routes & Auth middleware 
 import authRoute from './routes/auth';
 import endpointRoute from './routes/endpoints';
 import transactionRoute from './routes/transactions';
+import budgerRoute from './routes/budget';
 import mapRoute from './routes/map';
 import authMiddleware from './middleware/auth';
 
@@ -23,7 +25,20 @@ const app = express();
 
 // Setup View engine
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+
+// production view engine will server precompile pug views for speed
+// Otherwise views will be rendered as requested
+if (app.get('env') === 'production') {
+  app.engine('js', (filePath, options, callback) =>{
+    var f = require(filePath);
+    let data = f(options, pug.runtime);
+    callback(null, data);
+  });
+
+  app.set('view engine', 'js');
+} else {
+  app.set('view engine', 'pug');
+}
 
 const sess = {
   secret: process.env.SECRET,
@@ -54,6 +69,7 @@ app.get('/', function (req, res) {
 app.use('/auth', authRoute);
 app.use('/endpoints', endpointRoute);
 app.use('/transactions', authMiddleware, transactionRoute);
+app.use('/budget', authMiddleware, budgerRoute);
 app.use('/map', authMiddleware, mapRoute);
 
 // Setup error handling, dont display full error in production
