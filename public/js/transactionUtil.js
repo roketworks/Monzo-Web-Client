@@ -7,21 +7,24 @@ var util = {
   getTransactionDisplayName: function getTransactionDisplayName(name) {
     return _getTransactionDisplayName(name);
   },
-  addDisplayFields: function addDisplayFields(transaction) {
+  formatMoney: function formatMoney(amount, abs) {
+    return _formatMoney(amount, abs);
+  },
+  addDisplayFields: function addDisplayFields(transaction, abs) {
     // TODO: add support for other currencys
     transaction.categoryDisplayName = _getTransactionDisplayName(transaction.category);
     transaction.displayDate = new Date(transaction.created).toLocaleString();
-    transaction.displayBalance = formatMoney(transaction.account_balance);
-    transaction.displayAmount = formatMoney(transaction.amount);
+    transaction.displayBalance = _formatMoney(transaction.account_balance);
+    transaction.displayAmount = _formatMoney(transaction.amount, abs);
   } };
 
 
-var formatMoney = function formatMoney(amount) {var abs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;var symbol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '£';
+var _formatMoney = function _formatMoney(amount) {var abs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;var symbol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '£';
   if (abs) {
-    return _accounting2.default.formatMoney(Math.abs(amount) / 100, { symbol: symbol });
+    return _accounting2.default.formatMoney(Math.abs(amount) / 100, { symbol: symbol }, 2);
   }
 
-  return _accounting2.default.formatMoney(amount / 100, { symbol: symbol });
+  return _accounting2.default.formatMoney(amount / 100, { symbol: symbol }, 2);
 };
 
 var _getTransactionDisplayName = function _getTransactionDisplayName(name) {

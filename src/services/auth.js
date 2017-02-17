@@ -1,10 +1,13 @@
 'use strict';
 
-import models from '../models/index'; 
+import UserService from './user';
+import { userAttributeMap } from './user';
 import simpleOauthModule from 'simple-oauth2';
 
-const authUtil = {
-  createOAuthModule: () => {
+const userService = new UserService();
+
+class AuthService { 
+  createOAuthModule() {
     return simpleOauthModule.create({
       client: {
         id: process.env.MONZO_OAUTH_CLIENT_ID,
@@ -17,26 +20,27 @@ const authUtil = {
         authorizePath: '/'
       },
     });
-  }, 
-  getAuthorizationUrl: (oauthModule) => {
+  }
+
+  getAuthorizationUrl(oauthModule) {
     return oauthModule.authorizationCode.authorizeURL({
       redirect_uri: process.env.MONZO_OAUTH_REDIRECT_URL,
       state: process.env.MONZO_OAUTH_STATE
     });
-  },
-  createUserSaveToken: (user_id, account_id, token) => {
-    return new Promise((resovle, reject) => {
-      models.User.create({
-        monzo_user_id: user_id,
-        monzo_acc_id: account_id,
-        monzo_token: token, 
-      }).then((user) => {
-        resovle();
-      });
-    });
-  },
-  updateUserToken: (user_id, token) => {
-    return new Promise((resolve, reject) => {
+  }
+
+  createUserSaveToken(user_id, account_id, token) {
+    return userService.createUser(user_id, account_id, token);
+  }
+
+  updateUserToken(user_id, token) {
+    const params = {};
+    params[userAttributeMap.USER_ID] = user_id; 
+    params[userAttributeMap.TOKEN] = token;
+
+    return userService.updateUser(params);
+
+    /*return new Promise((resolve, reject) => {
       models.User.find({where: {monzo_user_id: user_id}})
         .then((user) => {
           if (user){
@@ -45,8 +49,8 @@ const authUtil = {
             resolve(null);  
           }
         }).catch((err) => { reject(err); });
-    });
+    });*/
   }
-};
+}
 
-export default authUtil;
+export default AuthService;
