@@ -6,5 +6,8 @@ mixin transactionrow(transaction)
     td= transaction.displayAmount
     td= transaction.displayBalance
     td 
-      a(href='/transactions/' + transaction.id) 
+      if transaction.is_load
         span.glyphicon.glyphicon-link
+      else 
+        a(href='/transactions/' + transaction.id) 
+          span.glyphicon.glyphicon-link

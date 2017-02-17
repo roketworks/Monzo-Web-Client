@@ -9,4 +9,4 @@ deploy:
   provider: heroku
   skip_cleanup: true
   api_key: $HEROKU_KEY
-  app: monzo-web-client-dev
+  app: $HEROKU_APP

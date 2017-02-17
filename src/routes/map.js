@@ -10,6 +10,7 @@ router.get('/', function(req, res, next){
   return res.render('map');
 });
 
+// TODO: possibly move into transaction router
 router.get('/json', function(req, res, next){
   // Todo, some sort of pagination
   const sessionData = sessionHelper.getSessionData(req);
