@@ -6,6 +6,9 @@ const util = {
   getTransactionDisplayName: (name) => {
     return getTransactionDisplayName(name);
   },
+  formatMoney: (amount, abs) => {
+    return formatMoney(amount, abs);
+  },
   addDisplayFields: (transaction, abs) => {
     // TODO: add support for other currencys
     transaction.categoryDisplayName = getTransactionDisplayName(transaction.category);
@@ -17,10 +20,10 @@ const util = {
 
 const formatMoney = (amount, abs = false, symbol = '£') => {
   if (abs) {
-    return accounting.formatMoney(Math.abs(amount)/100, {symbol: symbol});
+    return accounting.formatMoney(Math.abs(amount)/100, {symbol: symbol}, 2);
   }
 
-  return accounting.formatMoney(amount/100, {symbol: symbol});
+  return accounting.formatMoney(amount/100, {symbol: symbol}, 2);
 };
 
 const getTransactionDisplayName = (name) => {

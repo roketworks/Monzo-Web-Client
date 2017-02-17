@@ -2,7 +2,7 @@
 
 import accounting from 'accounting';
 import moment from'moment';
-import Monzo from '../modules/monzoApi';
+import Monzo from '../services/monzoApi';
 import userUtil from '../utils/userUtil';
 import transactionUtil from '../utils/transactionUtil';
 

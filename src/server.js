@@ -32,10 +32,9 @@ const sess = {
   cookie: {path: '/', httpOnly: true}
 };
 
-const RedisStore = redis(session);
-
 if (app.get('env') === 'production') {
   // TODO: look at secure cookies only, possobily need to set proxy options when running on herkou
+  const RedisStore = redis(session);
   sess.store = new RedisStore({url: process.env.REDIS_URL});
 }
 

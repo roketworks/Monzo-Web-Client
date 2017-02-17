@@ -548,7 +548,6 @@ class MonzoApi {
                 req.set('Authorization', `Bearer ${accessToken}`);
             }
 
-            // Changes to module here... 
             if (requestData) {
                 req.send(requestData);
             }

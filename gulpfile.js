@@ -61,7 +61,7 @@ gulp.task('cleanDist', function () {
 // Browserify some clientjs
 // only to be ran after babel task
 // Possibly think about running seperate babel tasks with different presets for this task
-gulp.task('clientjs', ['cleanDist'], () => {
+gulp.task('clientjs', ['babel'], () => {
   gulp.src(paths.clientjs)
     .pipe(browserify({standalone: 'transactionUtil'}))
     .pipe(gulp.dest('./public/js'));
