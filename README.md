@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5ae643c982b84e4e83bd01ada1bb8f84)](https://www.codacy.com/app/roketworks/Monzo-Web-Client?utm_source=github.com&utm_medium=referral&utm_content=roketworks/Monzo-Web-Client&utm_campaign=badger)
 # Monzo Web Client [![Build Status](https://travis-ci.org/roketworks/Monzo-Web-Client.svg?branch=master)](https://travis-ci.org/roketworks/Monzo-Web-Client)
 Monzo Web client built with node, express, postgres. Current allows viewing transaction history as a list and exporting. Also has view for indiviual transactions. Plans to add budgeting features per category similar to Monzo iOS app. Currently WIP. 
 
