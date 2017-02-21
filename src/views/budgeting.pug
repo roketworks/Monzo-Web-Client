@@ -122,15 +122,14 @@ append scripts
         url: '/budgeting',
         type: 'post',
         contentType: "application/json",
-        dataType: 'json',
         data: JSON.stringify({budgets: budgets}),
         success: function(data) {
           //alert(data);
           // Refresh
-          location.reload();
+          window.location.reload();
         }, 
         error: function(err) {
-          
+          alert(err);
         }
       });
     }

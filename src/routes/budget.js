@@ -64,7 +64,7 @@ router.post('/', function(req, res, next) {
       promises.push(budgetService.saveBudgetForUser(cat_id, user_id, value));
     });
     Promise.all(promises).then((values) => {
-      res.status(200).send('Sucess');
+      res.status(200).send('Success');
     }).catch((err) => {
       next(err);
     });
