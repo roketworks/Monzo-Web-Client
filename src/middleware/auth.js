@@ -19,11 +19,11 @@ export default (req, res, next) => {
     token.refresh().then((result) => {
       const refereshed_token = oauth2.accessToken.create(result.token);
 
-      authService.updateUserToken(sessionData.user_id, refereshed_token).then((result) => {
+      authService.updateUserToken(sessionData.monzo_user_id, refereshed_token).then((result) => {
         if (!result) {
           return next({status: 500, msg: 'Error occured', err: ''});
         }
-        sessionHelper.setSessionData(req, result.monzo_user_id, refereshed_token);
+        sessionHelper.setSessionData(req, result.id, sessionData.monzo_user_id, refereshed_token);
         return next();
       });
     });

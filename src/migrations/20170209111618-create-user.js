@@ -17,6 +17,9 @@ module.exports = {
       monzo_token: {
         type: Sequelize.JSON
       },
+      payday_day: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

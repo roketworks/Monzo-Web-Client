@@ -7,6 +7,16 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Gulp task",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/node_modules/gulp/bin/gulp.js",
+      "args": [
+        "mocha"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Debug Transpiled",
       "program": "${workspaceRoot}/src/server.js",
       "cwd": "${workspaceRoot}", 

@@ -25,8 +25,8 @@ router.get('/', (req, res) => {
   if (token.expired()) {
     token.refresh().then((new_token) => {
       const refreshed_token = oauth2.accessToken.create(new_token.token);
-      authService.updateUserToken(sessionData.user_id, refreshed_token).then(() => {
-        sessionHelper.setSessionData(req, sessionData.user_id, refreshed_token);
+      authService.updateUserToken(sessionData.monzo_user_id, refreshed_token).then((user) => {
+        sessionHelper.setSessionData(req, user.id, sessionData.monzo_user_id, refreshed_token);
         return res.redirect('/transactions');  
       });
     });
@@ -50,20 +50,20 @@ router.get('/redirect', (req, res, next) => {
     }
 
     const token = oauth2.accessToken.create(result);
-    const user_id = result.user_id;
+    const monzo_user_id = result.user_id;
 
     // Save/update token & monzo user details
-    authService.updateUserToken(user_id, token).then((result) => {
+    authService.updateUserToken(monzo_user_id, token).then((result) => {
       // User exists and has been updated
       if (result) {
-        sessionHelper.setSessionData(req, user_id, token);
+        sessionHelper.setSessionData(req, result.id, monzo_user_id, token);
         return res.redirect('/transactions'); 
       }
       
       // result is null user did not exist 
       // need to lookup account id and save user token
-      createUser(user_id, token).then(() => {
-        sessionHelper.setSessionData(req, user_id, token);
+      createUser(monzo_user_id, token).then((result) => {
+        sessionHelper.setSessionData(req, result.id, monzo_user_id, token);
         return res.redirect('/transactions');
       }).catch((err) => {
         return next(err);
@@ -76,8 +76,8 @@ const createUser = (user_id, token) => {
   return new Promise((resolve, reject) => {
     const service = new Monzo(token.token.access_token);
     service.getAccountIdApi().then((acc_id) => {
-      authService.createUserSaveToken(user_id, acc_id, token).then(() => {
-        resolve();
+      authService.createUserSaveToken(user_id, acc_id, token).then((result) => {
+        resolve(result);
       });  
     }).catch((err) => { reject(err); });
   });

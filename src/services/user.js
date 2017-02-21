@@ -29,7 +29,7 @@ class UserService {
         monzo_acc_id: account_id,
         monzo_token: token, 
       }).then((user) => {
-        resovle();
+        resovle(user);
       });
     });
   }
@@ -37,18 +37,22 @@ class UserService {
   updateUser(attributes) {
     return new Promise((resolve, reject) => {
       const user_id = attributes[userAttributeMap.USER_ID];
-      if (user_id === undefined) {
-        reject('Unable to find userid')
+      const monzo_user_id = attributes[userAttributeMap.MONZO_USER_ID];
+
+      if (user_id === undefined && monzo_user_id === undefined) {
+        reject('Unable to find user id on monzo user id')
       }
 
       const where = {}
-      where[userAttributeMap.USER_ID] = user_id; 
+      const index = user_id === undefined ? userAttributeMap.MONZO_USER_ID : userAttributeMap.USER_ID;
+      const value = user_id === undefined ? monzo_user_id : user_id; 
+      where[index] = value; 
 
       models.User.find({where: where}).then((user) => {
         if (!user){
           resolve(null);
         } else {
-          delete attributes[userAttributeMap.USER_ID];
+          delete attributes[index];
           user.updateAttributes(attributes).then((result) => {
             resolve(result);
           });
@@ -61,10 +65,12 @@ class UserService {
 }
 
 const userAttributeMap =  {
-  USER_ID: "monzo_user_id", 
+  MONZO_USER_ID: "monzo_user_id",
+  USER_ID: "id", 
   ACCOUNT_ID: "monzo_acc_id", 
-  TOKEN: "monzo_token"
+  TOKEN: "monzo_token", 
+  PAYDAY: "payday_day"
 };
 
 export default UserService;
-export { userAttributeMap } 
+export { userAttributeMap }; 

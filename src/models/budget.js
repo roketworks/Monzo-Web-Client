@@ -5,8 +5,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Budget.belongsTo(models.User);
-        Budget.hasOne(models.Category)
+        Budget.belongsTo(models.User, {foreignKey: 'budget_user_id'});
+        Budget.belongsTo(models.Category, {foreignKey: 'budget_cat_id'});
       }
     }
   });
