@@ -16,6 +16,12 @@
   padding-bottom: 15px;
 }
 
+#current-spend > small{ 
+  font-size: 65%;
+  font-weight: 400; 
+  color: #777;
+}
+
 .buttonbar {
   float:right;
 }

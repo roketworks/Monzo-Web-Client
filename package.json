@@ -69,6 +69,7 @@
     "gulp-watch-pug": "^1.0.0",
     "jshint": "^2.9.4",
     "mocha": "^3.2.0",
+    "sinon": "^1.17.7",
     "umzug": "^1.11.0",
     "vinyl-source-stream": "^1.1.0",
     "yargs": "^6.6.0"

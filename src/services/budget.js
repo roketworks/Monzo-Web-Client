@@ -32,13 +32,16 @@ class BudgetService {
         
         if (user.payday) {
           if (currentDay >= user.payday) {
-            since = moment().year().month().day(user.payday).hour(0).minute(0).second(0); 
+            since = moment().year().month().day(user.payday -1).hour(0).minute(0).second(0); 
           } else {
-            since = moment().subtract(1, 'months').day(result.payday).hour(0).minute(0).second(0);
+            since = moment().subtract(1, 'months').day(result.payday -1).hour(0).minute(0).second(0);
           }
         } else {
           since = moment().day(1).hour(0).minute(0).second(0);
         }
+
+        let month = since.format('Do MMMM');
+        results.month = month;
 
         monzo.accessToken = access_token;
         monzo.getTransactions(user.monzo_acc_id, true, {since: since}, access_token)

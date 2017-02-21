@@ -35,13 +35,12 @@ router.get('/', function(req, res, next) {
           
         } else { 
           budget.currentSpend = transaction.totalspend / 100;
-          //resultBudgets.push(createDisplayBudget(budget.Category.cat_id, budget.Category.cat_name, budget.budget_value, transaction.totalspend));
-          //budget.transactions = transaction.transactions;
         }
       });
 
       return res.render('budgeting', {
         payday: result.payday,
+        month: result.month,
         spend: transactionUtil.formatMoney(totalSpend, true),
         budgets: resultBudgets, 
         categories: categories
