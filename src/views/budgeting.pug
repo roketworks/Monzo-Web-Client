@@ -1,0 +1,137 @@
+extends ./shared/layout
+
+append styles 
+  link(href='/css/budget.css' rel='stylesheet')
+
+block content
+  .main-container
+    .balance-container.container-fluid
+      .row
+        //- possibly refactor into mixin and share the css, think about scss
+        span#current-spend Spent: #{spend} #[small from #{month}]
+        span.buttonbar
+          button(type="button" aria-label="Left Align" data-toggle="modal" data-target="#settings-modal")#exportbtn.btn.btn-default
+            span(aria-hidden="true").glyphicon.glyphicon-cog
+            span  Settings
+    hr
+    .budgets-container 
+      each budget in budgets
+        .budget
+          h4 #{budget.categoryDisplayName}
+            span.pull-right £#{budget.currentSpend} of £#{budget.budget}
+          .progress
+            - 
+              var calculatedPercentage;
+              if (budget.budget === 0) {
+                calculatedPercentage = 100;
+              } else {
+                calculatedPercentage = (budget.currentSpend/budget.budget) * 100;
+              }
+               
+            .progress-bar(role="progressbar" style="width: " + calculatedPercentage + "%")
+
+  mixin budgetinput(id, label, value)
+    .form-group
+      label(for="general")= label
+      .input-group.budget-input
+        span.input-group-addon
+          span(class!=attributes.class data-toggle="tooltip" data-placement="top" title="Must be above 1")
+        input.form-control(type="number" placeholder="0" name=id id=id min="0" step="1" value=value)
+
+  .modal.fade#settings-modal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button(type="button" class="close" data-dismiss="modal")
+            span(aria-hidden="true") ×
+            span.sr-only Close
+          h4.modal-title#settings-modal-label Settings
+        .modal-body  
+          form#settings-form(data-toggle="validator" role="form")
+            .form-group
+              label(for="payday") Your Payday
+              .input-group
+                span.input-group-addon
+                  span.glyphicon.glyphicon-piggy-bank(data-toggle="tooltip" data-placement="top" title="Must be between 1 and 30")
+                input.form-control(type="number" placeholder="28" name="payday" id="payday" min="1" max="30" step="1" value=payday)
+            hr
+            label Budgets
+            .row
+              each category in categories
+                - var count = 0;
+                if (count == 2)
+                  .row 
+                .col-sm-6
+                  - 
+                    var budget = budgets.find(function(element){ return element.category === category.cat_id; });
+                    var budgetVal = budget === undefined ? 0 : budget.budget;
+                  +budgetinput(category.cat_id, category.cat_name, budgetVal)(class=category.cat_icon_class)
+
+        .modal-footer
+          button(type="button" class="btn btn-default" data-dismiss="modal") Close
+          button#modal-save(type="submit" class="btn btn-primary" form="settings-form") Save Changes
+        
+append scripts 
+  script(src='/js/transactionUtil.js')
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js")
+  script. 
+    // Enable tooltips
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  script. 
+    $('#settings-form').validator().on('submit', function(e){
+      if (e.isDefaultPrevented()){
+        e.preventDefault();
+        alert('invalid');
+      } else {
+          // TODO: form valid
+        e.preventDefault();
+        // POST TO Payday endpoint and budget endpoint  
+        var payday = $('#payday').val();
+        $.ajax({
+          method: 'POST', 
+          url: '/settings/payday', 
+          data: {payday: payday}, 
+          success: function(res) {
+            var budgets = getBudgetsFromForm();
+            submitBudgets(budgets);
+          }, 
+          error: function(err) {
+            alert(err);
+          }
+        });
+      }
+    });
+
+    function getBudgetsFromForm() { 
+      var result = [];
+      $('#settings-form .budget-input .form-control').each(function(i, obj){
+        var bud = {
+          category: obj.id, 
+          value: obj.value
+        };
+        result.push(bud);
+      });
+
+      return result;
+    }
+
+    function submitBudgets(budgets) {
+      $.ajax({
+        url: '/budgeting',
+        type: 'post',
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify({budgets: budgets}),
+        success: function(data) {
+          //alert(data);
+          // Refresh
+          location.reload();
+        }, 
+        error: function(err) {
+          
+        }
+      });
+    }
+    

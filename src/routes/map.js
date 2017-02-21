@@ -17,7 +17,7 @@ router.get('/json', function(req, res, next){
   const sessionData = sessionHelper.getSessionData(req);
   monzoService.accessToken = sessionData.token.token.access_token;
 
-  monzoService.getAccountIdDb(sessionData.user_id).then((account_id) => {
+  monzoService.getAccountIdDb(sessionData.monzo_user_id).then((account_id) => {
     return monzoService.getTransactions(account_id, true, {}, sessionData.token.token.access_token);
   }).then((transactions) => {
     return res.json(transactions.filter(function(value){ return value.is_load === false})); 

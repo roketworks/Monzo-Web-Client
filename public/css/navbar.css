@@ -16,6 +16,8 @@ body {
 .navbar-inverse .navbar-brand {
   color: #ffffff;
   font-weight: 700;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .navbar-nav > li {

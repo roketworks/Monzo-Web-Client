@@ -33,23 +33,12 @@ class AuthService {
     return userService.createUser(user_id, account_id, token);
   }
 
-  updateUserToken(user_id, token) {
+  updateUserToken(monzo_user_id, token) {
     const params = {};
-    params[userAttributeMap.USER_ID] = user_id; 
+    params[userAttributeMap.MONZO_USER_ID] = monzo_user_id; 
     params[userAttributeMap.TOKEN] = token;
 
     return userService.updateUser(params);
-
-    /*return new Promise((resolve, reject) => {
-      models.User.find({where: {monzo_user_id: user_id}})
-        .then((user) => {
-          if (user){
-            user.updateAttributes({monzo_token: token }).then(() => {resolve(user);});
-          } else {
-            resolve(null);  
-          }
-        }).catch((err) => { reject(err); });
-    });*/
   }
 }
 

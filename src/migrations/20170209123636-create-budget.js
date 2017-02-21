@@ -8,6 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      budget_cat_id: {
+        type: Sequelize.INTEGER, 
+        allowNull: false, 
+        references: {model: 'Categories', key: 'id'}
+      },
+      budget_user_id: {
+        type: Sequelize.INTEGER, 
+        allowNull: false, 
+        references: {model: 'Users', key: 'id'}
+      },
       budget_value: {
         type: Sequelize.INTEGER
       },

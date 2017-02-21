@@ -1,0 +1,72 @@
+.main-container {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 100px;
+}
+
+.balance-container {
+  width: 100%
+}
+
+#current-spend {
+  font-weight: 500;
+  font-size: 20px; 
+  /*padding: 8px;*/
+  padding-bottom: 15px;
+}
+
+#current-spend > small{ 
+  font-size: 65%;
+  font-weight: 400; 
+  color: #777;
+}
+
+.buttonbar {
+  float:right;
+}
+
+.budget {
+  background-color: #fff;
+  padding-left: 15px; 
+  padding-right: 15px; 
+  border-width: 1px; 
+  border-style: solid;
+  border-color: #fff;
+  border-radius: 2px;
+  transition: box-shadow .25s;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+  margin-bottom: 15px;
+}
+
+.budget > h4 {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  background-color: #ffac00;
+}
+
+#settings-modal {
+  padding-top: 100px;
+  /*height: 90%;*/
+  overflow: auto;
+}
+
+@media(min-width: 970px){
+  .main-container, .balance-container { 
+    max-width: 700px;
+  }
+  /*#settings-modal .modal-dialog {
+    width: 700px;
+  }*/
+}
+
+@media(min-width: 1200px) {
+  .main-container, .balance-container {
+    max-width: 970px;
+  }
+  /*#settings-modal .modal-dialog{
+    width: 970px;
+  }*/
+}

@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
   monzoService.accessToken = sessionData.token.token.access_token;
   
   // / TODO: Reduce nesting by returning the nested promises in a chain rather than nesting
-  monzoService.getAccountIdDb(sessionData.user_id).then((account_id) => {
+  monzoService.getAccountIdDb(sessionData.monzo_user_id).then((account_id) => {
     monzoService.getBalance(account_id).then((balance) => {
      monzoService.getTransactions(account_id, true, {}).then((transactions) => {
         return res.render('transactions', {
@@ -35,7 +35,7 @@ router.get('/loadmore', function(req, res, next){
   const sessionData = sessionUtil.getSessionData(req);
   monzoService.accessToken = sessionData.token.token.access_token;
   
-  monzoService.getAccountIdDb(sessionData.user_id).then((account_id) => {
+  monzoService.getAccountIdDb(sessionData.monzo_user_id).then((account_id) => {
     monzoService.getTransactions(account_id, true, {}).then((transactions) => {
       res.render('transactionrows',{"transactions": transactions}, function(err, html){
         if (err) return next(err);
@@ -51,7 +51,7 @@ router.get('/export', function(req, res, next) {
   const sessionData = sessionUtil.getSessionData(req);
   monzoService.accessToken = sessionData.token.token.access_token;
 
-  monzoService.getAccountIdDb(sessionData.user_id).then((account_id) => {
+  monzoService.getAccountIdDb(sessionData.monzo_user_id.user_id).then((account_id) => {
     monzoService.getTransactions(account_id, true, {}).then((transactions) => {
       res.setHeader('Content-disposition', 'attachment; filename=transactions.csv');
       res.setHeader('Content-type', 'text/csv');

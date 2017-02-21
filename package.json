@@ -2,6 +2,10 @@
   "name": "monzo-budgeter",
   "version": "0.0.1",
   "description": "Budget helper application for Monzo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/roketworks/Monzo-Web-Client.git"
+  },
   "engines": {
     "node": ">=6.0.0 <6.9.5"
   },
@@ -37,6 +41,7 @@
     "redis": "^2.6.5",
     "sequelize": "^3.30.2",
     "sequelize-cli": "^2.5.1",
+    "session-file-store": "^1.0.0",
     "simple-oauth2": "^1.0.3",
     "superagent": "^3.4.3"
   },
@@ -47,17 +52,25 @@
     "babel-preset-latest": "^6.22.0",
     "babel-register": "^6.23.0",
     "browser-sync": "^2.18.8",
+    "chai": "^3.5.0",
     "del": "^2.2.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-browserify": "^0.5.1",
     "gulp-if": "^2.0.2",
     "gulp-jshint": "^2.0.4",
+    "gulp-mocha": "^3.0.1",
     "gulp-pug": "^3.2.0",
     "gulp-relative-sourcemaps-source": "^0.1.5",
+    "gulp-replace": "^0.5.4",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.4.1",
+    "gulp-watch": "^4.3.11",
+    "gulp-watch-pug": "^1.0.0",
     "jshint": "^2.9.4",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7",
+    "umzug": "^1.11.0",
     "vinyl-source-stream": "^1.1.0",
     "yargs": "^6.6.0"
   }

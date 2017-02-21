@@ -1,3 +1,4 @@
 dist
+sessions
 node_modules
 .env

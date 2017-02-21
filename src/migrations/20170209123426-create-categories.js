@@ -14,6 +14,9 @@ module.exports = {
       cat_name: {
         type: Sequelize.STRING
       },
+      cat_icon_class: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
