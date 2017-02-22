@@ -51,7 +51,7 @@ router.get('/export', function(req, res, next) {
   const sessionData = sessionUtil.getSessionData(req);
   monzoService.accessToken = sessionData.token.token.access_token;
 
-  monzoService.getAccountIdDb(sessionData.monzo_user_id.user_id).then((account_id) => {
+  monzoService.getAccountIdDb(sessionData.monzo_user_id).then((account_id) => {
     monzoService.getTransactions(account_id, true, {}).then((transactions) => {
       res.setHeader('Content-disposition', 'attachment; filename=transactions.csv');
       res.setHeader('Content-type', 'text/csv');

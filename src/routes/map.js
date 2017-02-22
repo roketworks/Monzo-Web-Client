@@ -20,7 +20,7 @@ router.get('/json', function(req, res, next){
   monzoService.getAccountIdDb(sessionData.monzo_user_id).then((account_id) => {
     return monzoService.getTransactions(account_id, true, {}, sessionData.token.token.access_token);
   }).then((transactions) => {
-    return res.json(transactions.filter(function(value){ return value.is_load === false})); 
+    return res.json(transactions.filter(function(value){ return value.is_load === false; })); 
   }).catch((err) => {
     return next(err);
   });
