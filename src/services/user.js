@@ -40,10 +40,10 @@ class UserService {
       const monzo_user_id = attributes[userAttributeMap.MONZO_USER_ID];
 
       if (user_id === undefined && monzo_user_id === undefined) {
-        reject('Unable to find user id on monzo user id')
+        reject('Unable to find user id on monzo user id');
       }
 
-      const where = {}
+      const where = {};
       const index = user_id === undefined ? userAttributeMap.MONZO_USER_ID : userAttributeMap.USER_ID;
       const value = user_id === undefined ? monzo_user_id : user_id; 
       where[index] = value; 

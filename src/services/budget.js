@@ -1,11 +1,9 @@
 'use strict'; 
 
 import models from '../models/index'; 
-import Monzo from './monzo' 
-import UserService from './user';
+import Monzo from './monzo';
 import moment from 'moment';
 
-const userService = new UserService();
 const monzo = new Monzo();
 
 class BudgetService { 

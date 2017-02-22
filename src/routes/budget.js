@@ -3,7 +3,7 @@
 import express from 'express';
 import sessionHelper from '../utils/sessionHelper';
 import BudgetService from '../services/budget';
-import CategoryService from '../services/category'
+import CategoryService from '../services/category';
 import transactionUtil from '../utils/transactionUtil';
 
 const router = express.Router(); 
@@ -58,13 +58,13 @@ router.post('/', function(req, res, next) {
   categoryService.getAll().then((categories) => {
     let promises = [];
     budgets.forEach((budget) => {
-      const cat_id = categories.find((el) => { return el.cat_id === budget.category}).id;
+      const cat_id = categories.find((el) => { return el.cat_id === budget.category; }).id;
       const user_id = sessionData.user_id;
       const value = budget.value;
       promises.push(budgetService.saveBudgetForUser(cat_id, user_id, value));
     });
     Promise.all(promises).then((values) => {
-      res.status(200).send('Success');
+      res.status(200).send(JSON.stringify(values));
     }).catch((err) => {
       next(err);
     });
@@ -81,7 +81,7 @@ const createDisplayBudget = (category, categoryDisplay, budget, currentSpend) =>
     categoryDisplayName: categoryDisplay, 
     budget: budget, 
     currentSpend: currentSpend/100
-  }
+  };
 
   return res;
 };

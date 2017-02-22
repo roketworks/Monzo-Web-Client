@@ -12,7 +12,7 @@ import logger from 'morgan';
 import helmet from 'helmet';
 import redis from 'connect-redis';
 import filestore from 'session-file-store';
-import pug from 'pug'
+import pug from 'pug';
 
 // Get Routes & Auth middleware 
 import authRoute from './routes/auth';
