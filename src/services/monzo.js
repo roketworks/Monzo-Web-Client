@@ -47,7 +47,7 @@ class Monzo {
           spend_today: result.spend_today,
           formattedBalance: accounting.formatMoney(result.balance/100, {symbol: '£'}),
           formattedSpend: accounting.formatMoney(Math.abs(result.spend_today)/100, {symbol: '£'})
-        }
+        };
         resolve(balance);
       }).catch((err) => {
         reject(err);
