@@ -88,6 +88,10 @@ class BudgetService {
             resolve(result);
           });
         } else {
+          if (value === 0){
+            // If the budget exist and we are trying to save one with a value of 0 then skip
+            return resolve(null);
+          }
           const toCreate = {}; 
           toCreate[budgetAttributeMap.USER_ID] = user_id; 
           toCreate[budgetAttributeMap.CATEGORY_ID] = cat_id; 

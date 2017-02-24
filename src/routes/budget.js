@@ -52,7 +52,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  let budgets = req.body.budgets.filter((el) => { return el.value > 0; }); 
+  let budgets = req.body.budgets; //.filter((el) => { return el.value > 0; }); 
   const sessionData = sessionHelper.getSessionData(req);
 
   categoryService.getAll().then((categories) => {
