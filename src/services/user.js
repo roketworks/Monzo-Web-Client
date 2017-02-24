@@ -23,13 +23,13 @@ class UserService {
   }
 
   createUser(user_id, account_id, token){
-    return new Promise((resovle, reject) => {
+    return new Promise((resolve, reject) => {
       models.User.create({
         monzo_user_id: user_id,
         monzo_acc_id: account_id,
         monzo_token: token, 
       }).then((user) => {
-        resovle(user);
+        resolve(user);
       });
     });
   }
