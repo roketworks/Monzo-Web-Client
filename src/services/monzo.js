@@ -67,8 +67,38 @@ class Monzo {
     });  
   }
 
-  getTransactions(account_id, expand, paging) {
-    // TODO: Possibly rethink pagination
+  getTransactions(account_id, expand, paging, all_transactions) {
+    if (paging.limit === undefined) {
+      paging.limit = 100;
+    }
+
+    if (all_transactions === undefined) {
+      all_transactions = [];
+    }
+
+    let deferred = Promise.defer();
+
+    this.internalGetTransactions(account_id, expand, paging).then((result) => {
+      Array.prototype.push.apply(all_transactions, result);
+
+      if (result.length === paging.limit) {
+        const new_paging = {};
+        new_paging.limit = paging.limit; 
+        new_paging.before = paging.before; 
+        new_paging.since = result[0].id; 
+        
+        this.getTransactions(account_id, expand, new_paging, all_transactions).then((res) => {
+          deferred.resolve(res);
+        });
+      } else {
+        deferred.resolve(all_transactions.reverse());
+      }  
+    });
+
+    return deferred.promise;
+  }
+
+  internalGetTransactions(account_id, expand, paging) {
     let before = paging.before; 
     let since = paging.since; 
 
@@ -81,7 +111,8 @@ class Monzo {
     if (since  === undefined) {
       since = moment(before).subtract(7, 'days').toISOString();
     } else {
-      since = moment(since).toISOString();
+      const isDate = moment(since, moment.ISO_8601, true).isValid();
+      since = isDate ? moment(since).toISOString() : since;
     }
 
     const pagination = { 
@@ -99,8 +130,7 @@ class Monzo {
         transactions.forEach((transaction) => {
           transactionUtil.addDisplayFields(transaction, false);
         });
-        transactions.reverse();
-        resolve(transactions); 
+        return resolve(transactions); 
       }).catch((err) => {
         reject(err);
       });

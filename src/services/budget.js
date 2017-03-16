@@ -42,7 +42,7 @@ class BudgetService {
         results.month = month;
 
         monzo.accessToken = access_token;
-        monzo.getTransactions(user.monzo_acc_id, true, {since: since.toISOString()}, access_token)
+        monzo.getTransactions(user.monzo_acc_id, true, {since: since.toISOString()})
           .then((transactions) => {
             let resultTransactions = [];
             let spenttransactions = transactions.filter((el) => { return !el.is_load; });
