@@ -85,7 +85,7 @@ class Monzo {
         const new_paging = {};
         new_paging.limit = paging.limit; 
         new_paging.before = paging.before; 
-        new_paging.since = result[0].id; 
+        new_paging.since = result[result.length - 1].id; 
         
         this.getTransactions(account_id, expand, new_paging, all_transactions).then((res) => {
           deferred.resolve(res);
