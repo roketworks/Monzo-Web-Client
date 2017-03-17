@@ -1,7 +1,7 @@
 extends ./shared/_bootstrap
 append styles
   //	!-- Custom styles for this template --
-  link(href="/css/cover.css", rel="stylesheet")
+  link(href="/static/css/cover.css", rel="stylesheet")
 
 block body
   .site-wrapper
@@ -22,7 +22,7 @@ block body
           p.lead Monzo Web Client is a simple helper to manage your monzo spending. You can use the spending category and merchant to set your spending limits or you can just browse your recent transactions.
           p.lead
           a(href="/auth", class="btn btn-lg btn-default") 
-            img(src="/img/monzo-logo.svg" height=30 width=30) 
+            img(src="/static/img/monzo-logo.svg" height=30 width=30) 
             span  Sign in with Monzo
 
         .mastfoot

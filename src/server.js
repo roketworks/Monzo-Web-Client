@@ -63,7 +63,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session(sess));
-app.use(express.static(path.join(__dirname, '..', 'public'))); // Setup static file hanlding for public css/js/img files
+app.use('/static', express.static(path.join(__dirname, '..', 'public'))); // Setup static file hanlding for public css/js/img files
 
 app.get('/', function (req, res) {
   res.render('index', {title: 'Monzo Web Client'});

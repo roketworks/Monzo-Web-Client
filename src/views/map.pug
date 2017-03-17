@@ -1,7 +1,7 @@
 extends ./shared/layout
 
 append styles
-  link(href='/css/map.css' rel='stylesheet')
+  link(href='/static/css/map.css' rel='stylesheet')
   link(href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css' rel='stylesheet')
   style. 
     #ui-datepicker-div{z-index:9999 !important}
@@ -12,7 +12,7 @@ block content
       div#map
   
 append scripts 
-  script(src='/js/transactionUtil.js')
+  script(src='/static/js/transactionUtil.js')
   script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay.min.js')
   script(src='https://cdn.jsdelivr.net/jquery.loadingoverlay/latest/loadingoverlay_progress.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js')
