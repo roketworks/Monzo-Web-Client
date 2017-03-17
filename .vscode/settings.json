@@ -9,7 +9,6 @@
         "**/.hg": true,
         "**/.DS_Store": true, 
         "sample.env": true,
-        "README.md": true,
         "screenshots/**/*": true
     }
 }

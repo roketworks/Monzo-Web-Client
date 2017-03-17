@@ -3,6 +3,7 @@
 import models from '../models/index'; 
 import Monzo from './monzo';
 import moment from 'moment';
+import settingsUtils from '../utils/settingsUtil';
 
 const monzo = new Monzo();
 
@@ -25,24 +26,12 @@ class BudgetService {
         results.payday = user.payday_day;
         results.budgets = user.Budgets; 
 
-        let since;
-        const currentDay = moment().date(); 
-        
-        if (user.payday_day) {
-          if (currentDay >= user.payday_day) {
-            since = moment().date(user.payday_day).hour(0).minute(0).second(0); 
-          } else {
-            since = moment().subtract(1, 'months').date(user.payday_day).hour(0).minute(0).second(0);
-          }
-        } else {
-          since = moment().date(0).hour(0).minute(0).second(0);
-        }
-
-        let month = since.format('Do MMMM');
+        const payday_date = settingsUtils.getPaydayDate(user.payday_day);
+        let month = moment(payday_date).format('Do MMMM');
         results.month = month;
 
         monzo.accessToken = access_token;
-        monzo.getTransactions(user.monzo_acc_id, true, {since: since.toISOString()})
+        monzo.getTransactions(user.monzo_acc_id, true, {since: payday_date})
           .then((transactions) => {
             let resultTransactions = [];
             let spenttransactions = transactions.filter((el) => { return !el.is_load; });
