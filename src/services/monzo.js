@@ -93,6 +93,8 @@ class Monzo {
       } else {
         deferred.resolve(all_transactions.reverse());
       }  
+    }).catch((err) => {
+      deferred.reject(err);
     });
 
     return deferred.promise;

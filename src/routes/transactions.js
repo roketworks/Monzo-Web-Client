@@ -36,7 +36,7 @@ router.get('/loadmore', function(req, res, next){
   monzoService.accessToken = sessionData.token.token.access_token;
   
   monzoService.getAccountIdDb(sessionData.monzo_user_id).then((account_id) => {
-    monzoService.getTransactions(account_id, true, {}).then((transactions) => {
+    monzoService.getTransactions(account_id, true, {before: req.query.before}).then((transactions) => {
       res.render('transactionrows',{"transactions": transactions}, function(err, html){
         if (err) return next(err);
         res.send(html);
