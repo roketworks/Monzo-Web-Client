@@ -39,6 +39,7 @@ router.get('/', function(req, res, next) {
       });
 
       return res.render('budgeting', {
+        title: 'Budgets',
         payday: result.payday,
         month: result.month,
         spend: transactionUtil.formatMoney(totalSpend, true),

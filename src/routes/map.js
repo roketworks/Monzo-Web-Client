@@ -8,7 +8,7 @@ const router = express.Router();
 const monzoService = new Monzo();
 
 router.get('/', function(req, res, next){
-  return res.render('map');
+  return res.render('map', {title: 'Map'});
 });
 
 // TODO: possibly move into transaction router

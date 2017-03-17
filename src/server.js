@@ -66,7 +66,7 @@ app.use(session(sess));
 app.use(express.static(path.join(__dirname, '..', 'public'))); // Setup static file hanlding for public css/js/img files
 
 app.get('/', function (req, res) {
-  res.render('index');
+  res.render('index', {title: 'Monzo Web Client'});
 });
 
 // Register Routes
