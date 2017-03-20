@@ -8,13 +8,16 @@ block content
     .balance-container.container-fluid
       .row
         //- possibly refactor into mixin and share the css, think about scss
-        span#current-spend Spent: #{spend} #[small from #{month}]
+        span#current-spend Spent #{spend} of #{totalBudget} #[small from #{monthName}]
         span.buttonbar
           button(type="button" aria-label="Left Align" data-toggle="modal" data-target="#settings-modal")#exportbtn.btn.btn-default
             span(aria-hidden="true").glyphicon.glyphicon-cog
             span  Settings
     hr
     .budgets-container 
+      if (budgets.length === 0)
+        div.alert.alert-info(role="alert")
+          span #[strong No information!] Please configure some budget values to get started. 
       each budget in budgets
         .budget
           h4 #{budget.categoryDisplayName}
@@ -30,14 +33,18 @@ block content
                
             .progress-bar(role="progressbar" style="width: " + calculatedPercentage + "%")
     hr
-    //- nav
-    //-   ul.pager
-    //-     li.previous
-    //-       a(href="#")
-    //-         span &larr; Older
-    //-     li.next
-    //-       a(href="#") Newer 
-    //-         span &rarr;
+    nav
+      ul.pager
+        li.previous
+          a(href=`/budgeting?month=${prevMonth}`)
+            span &larr; Older
+        - var next_disabled = nextMonth === undefined;
+        li.next(class=next_disabled ? "disabled" : "")
+          if (!next_disabled)
+            a(href=`/budgeting?month=${nextMonth}`) 
+              span Newer &rarr; 
+          else
+            span Newer &rarr;
 
   mixin budgetinput(id, label, value)
     .form-group

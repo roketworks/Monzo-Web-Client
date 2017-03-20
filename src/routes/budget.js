@@ -1,6 +1,7 @@
 'use strict';
 
 import express from 'express';
+import moment from 'moment';
 import sessionHelper from '../utils/sessionHelper';
 import BudgetService from '../services/budget';
 import CategoryService from '../services/category';
@@ -13,8 +14,15 @@ const categoryService = new CategoryService();
 router.get('/', function(req, res, next) {
   const sessionData = sessionHelper.getSessionData(req);
 
+  let month;
+  if (req.query.month === undefined) {
+    month = moment().month(); 
+  } else {
+    month = parseInt(req.query.month);
+  }
+
   categoryService.getAll().then((categories) => {
-    budgetService.getBudgetsForUser(sessionData.user_id, sessionData.token.token.access_token).then((result) => {
+    budgetService.getBudgetsForUser(sessionData.user_id, month, sessionData.token.token.access_token).then((result) => {
       // Correlate transactions & budgets, possibly move into service 
       const resultBudgets = [];
 
@@ -38,14 +46,21 @@ router.get('/', function(req, res, next) {
         }
       });
 
+      const totalBudget = resultBudgets.reduce((acc, value) => acc + value.budget, 0);
+
       return res.render('budgeting', {
         title: 'Budgets',
         payday: result.payday,
-        month: result.month,
+        monthName: result.month, // TODO: refactor out of budget service
         spend: transactionUtil.formatMoney(totalSpend, true),
         budgets: resultBudgets, 
-        categories: categories
+        totalBudget: transactionUtil.formatMoney(totalBudget * 100, true), // TODO: refactor formatMoney into formatMoneySmall, formatMoneyLarge etc
+        categories: categories, 
+        nextMonth: getNextMonth(month),
+        prevMonth: moment().month(month).subtract(1, 'months').month(),
       });
+    }).catch((err) => {
+      next(err);
     });
   }).catch((err) => {
     next(err);
@@ -53,7 +68,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  let budgets = req.body.budgets.filter((el) => { return el.value > 0; }); 
+  let budgets = req.body.budgets; //.filter((el) => { return el.value > 0; }); 
   const sessionData = sessionHelper.getSessionData(req);
 
   categoryService.getAll().then((categories) => {
@@ -85,6 +100,13 @@ const createDisplayBudget = (category, categoryDisplay, budget, currentSpend) =>
   };
 
   return res;
+};
+
+const getNextMonth = (current) => {
+  var n = moment().month(current).add(1, 'months').month(); 
+  if (!(n > moment().month())) {
+    return n
+  }                    
 };
 
 export default router;
