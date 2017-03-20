@@ -38,11 +38,14 @@ router.get('/', function(req, res, next) {
         }
       });
 
+      const totalBudget = resultBudgets.reduce((acc, value) => acc + value.budget, 0);
+
       return res.render('budgeting', {
         payday: result.payday,
         month: result.month,
         spend: transactionUtil.formatMoney(totalSpend, true),
         budgets: resultBudgets, 
+        totalBudget: transactionUtil.formatMoney(totalBudget * 100, true), // TODO: refactor formatMoney into formatMoneySmall, formatMoneyLarge etc
         categories: categories
       });
     });

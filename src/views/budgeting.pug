@@ -8,7 +8,7 @@ block content
     .balance-container.container-fluid
       .row
         //- possibly refactor into mixin and share the css, think about scss
-        span#current-spend Spent: #{spend} #[small from #{month}]
+        span#current-spend Spent #{spend} of #{totalBudget} #[small from #{month}]
         span.buttonbar
           button(type="button" aria-label="Left Align" data-toggle="modal" data-target="#settings-modal")#exportbtn.btn.btn-default
             span(aria-hidden="true").glyphicon.glyphicon-cog
