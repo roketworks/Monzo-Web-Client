@@ -1,7 +1,7 @@
 extends ./shared/layout
 
 append styles 
-  link(href='/css/budget.css' rel='stylesheet')
+  link(href='/static/css/budget.css' rel='stylesheet')
 
 block content
   .main-container
@@ -29,6 +29,15 @@ block content
               }
                
             .progress-bar(role="progressbar" style="width: " + calculatedPercentage + "%")
+    hr
+    //- nav
+    //-   ul.pager
+    //-     li.previous
+    //-       a(href="#")
+    //-         span &larr; Older
+    //-     li.next
+    //-       a(href="#") Newer 
+    //-         span &rarr;
 
   mixin budgetinput(id, label, value)
     .form-group
@@ -49,30 +58,37 @@ block content
         .modal-body  
           form#settings-form(data-toggle="validator" role="form")
             .form-group
-              label(for="payday") Your Payday
+              label(for="payday") Your Payday Date
               .input-group
                 span.input-group-addon
                   span.glyphicon.glyphicon-piggy-bank(data-toggle="tooltip" data-placement="top" title="Must be between 1 and 30")
                 input.form-control(type="number" placeholder="28" name="payday" id="payday" min="1" max="30" step="1" value=payday)
             hr
-            label Budgets
-            .row
-              each category in categories
-                - var count = 0;
-                if (count == 2)
-                  .row 
-                .col-sm-6
-                  - 
-                    var budget = budgets.find(function(element){ return element.category === category.cat_id; });
-                    var budgetVal = budget === undefined ? 0 : budget.budget;
-                  +budgetinput(category.cat_id, category.cat_name, budgetVal)(class=category.cat_icon_class)
+            label(style="width:100%;")
+              span Budgets 
+              span(style="float:right;") 
+                button(type="button" class="btn btn-xs" data-toggle="collapse" data-target="#budget-collapse")
+                  span.glyphicon.glyphicon-chevron-down
+
+            .collapse#budget-collapse
+              .row
+                each category in categories
+                  - var count = 0;
+                  if (count == 2)
+                    .row 
+                  .col-sm-6
+                    - 
+                      var budget = budgets.find(function(element){ return element.category === category.cat_id; });
+                      var budgetVal = budget === undefined ? 0 : budget.budget;
+                    +budgetinput(category.cat_id, category.cat_name, budgetVal)(class=category.cat_icon_class)
+            hr(style="margin:5px 0;")
 
         .modal-footer
           button(type="button" class="btn btn-default" data-dismiss="modal") Close
           button#modal-save(type="submit" class="btn btn-primary" form="settings-form") Save Changes
         
 append scripts 
-  script(src='/js/transactionUtil.js')
+  script(src='/static/js/transactionUtil.js')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js")
   script. 
     // Enable tooltips
@@ -98,7 +114,7 @@ append scripts
             submitBudgets(budgets);
           }, 
           error: function(err) {
-            alert(err);
+            // TODO: handle error
           }
         });
       }
@@ -124,12 +140,11 @@ append scripts
         contentType: "application/json",
         data: JSON.stringify({budgets: budgets}),
         success: function(data) {
-          //alert(data);
           // Refresh
           window.location.reload();
         }, 
         error: function(err) {
-          alert(err);
+          // TODO: handle error
         }
       });
     }

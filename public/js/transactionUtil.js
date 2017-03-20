@@ -3,6 +3,42 @@
 
 var _accounting = _dereq_('accounting');var _accounting2 = _interopRequireDefault(_accounting);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
+var _formatMoney = function _formatMoney(amount) {var abs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;var symbol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '£';
+  if (abs) {
+    return _accounting2.default.formatMoney(Math.abs(amount) / 100, { symbol: symbol }, 2);
+  }
+
+  return _accounting2.default.formatMoney(amount / 100, { symbol: symbol }, 2);
+};
+
+var _getTransactionDisplayName = function _getTransactionDisplayName(name) {
+  switch (name) {
+    case 'monzo':
+    case 'mondo':
+      return 'Monzo';
+    case 'general':
+      return 'General';
+    case 'eating_out':
+      return 'Eating Out';
+    case 'expenses':
+      return 'Expenses';
+    case 'transport':
+      return 'Transport';
+    case 'cash':
+      return 'Cash';
+    case 'bills':
+      return 'Bills';
+    case 'entertainment':
+      return 'Entertainment';
+    case 'shopping':
+      return 'Shopping';
+    case 'holidays':
+      return 'Holidays';
+    case 'groceries':
+      return 'Groceries';}
+
+};
+
 var util = {
   getTransactionDisplayName: function getTransactionDisplayName(name) {
     return _getTransactionDisplayName(name);
@@ -16,44 +52,8 @@ var util = {
     transaction.displayDate = new Date(transaction.created).toLocaleString();
     transaction.displayBalance = _formatMoney(transaction.account_balance);
     transaction.displayAmount = _formatMoney(transaction.amount, abs);
-  } };
+  } };exports.default =
 
-
-var _formatMoney = function _formatMoney(amount) {var abs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;var symbol = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '£';
-  if (abs) {
-    return _accounting2.default.formatMoney(Math.abs(amount) / 100, { symbol: symbol }, 2);
-  }
-
-  return _accounting2.default.formatMoney(amount / 100, { symbol: symbol }, 2);
-};
-
-var _getTransactionDisplayName = function _getTransactionDisplayName(name) {
-  switch (name) {
-    case "monzo":
-    case "mondo":
-      return "Monzo";
-    case "general":
-      return "General";
-    case "eating_out":
-      return "Eating Out";
-    case "expenses":
-      return "Expenses";
-    case "transport":
-      return "Transport";
-    case "cash":
-      return "Cash";
-    case "bills":
-      return "Bills";
-    case "entertainment":
-      return "Entertainment";
-    case "shopping":
-      return "Shopping";
-    case "holidays":
-      return "Holidays";
-    case "groceries":
-      return "Groceries";}
-
-};exports.default =
 
 util;
 //# sourceMappingURL=transactionUtil.js.map

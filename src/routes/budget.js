@@ -41,6 +41,7 @@ router.get('/', function(req, res, next) {
       const totalBudget = resultBudgets.reduce((acc, value) => acc + value.budget, 0);
 
       return res.render('budgeting', {
+        title: 'Budgets',
         payday: result.payday,
         month: result.month,
         spend: transactionUtil.formatMoney(totalSpend, true),
