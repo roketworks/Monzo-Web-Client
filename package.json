@@ -7,7 +7,7 @@
     "url": "https://github.com/roketworks/Monzo-Web-Client.git"
   },
   "engines": {
-    "node": ">=6.0.0 <6.9.5"
+    "node": ">=6.0.0 <6.11.1"
   },
   "scripts": {
     "build": "gulp build",
