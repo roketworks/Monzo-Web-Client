@@ -22,7 +22,8 @@ class Monzo {
   getAccountIdApi() {
     return new Promise((resolve, reject) => {
       api.accounts(this._accessToken).then((result) => {
-        resolve(result.accounts[0].id);
+        var openAccounts = result.accounts.filter(account => !account.closed);
+        resolve(result.openAccounts[0].id);
       }).catch((err) => { 
         reject(err); 
       });
